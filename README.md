@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Personalized Learning Platform
 
 An AI-powered platform for personalized education, addressing learning gaps and promoting equity.
@@ -37,3 +38,7 @@ This project provides a full-stack solution for adaptive, engaging, and equitabl
 - Mobile: Firebase App Distribution
 
 > If you do not have access to the NovaXHacklite GitHub org, fork this repo or use a personal account for demonstration.
+=======
+# LMS
+web project
+>>>>>>> 9c95832d377768080ec32309787189b4f7faa12d
