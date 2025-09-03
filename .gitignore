@@ -1,0 +1,21 @@
+# Node
+node_modules/
+dist/
+.env
+
+# React
+frontend/web/build/
+frontend/web/node_modules/
+
+# Flutter
+frontend/mobile/build/
+frontend/mobile/.dart_tool/
+frontend/mobile/.packages
+frontend/mobile/.flutter-plugins
+frontend/mobile/.flutter-plugins-dependencies
+frontend/mobile/.idea/
+frontend/mobile/.vscode/
+
+# Mac/Windows
+.DS_Store
+Thumbs.db
