@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-const LoginForm = ({ onLogin }) => {
+const SignUpForm = ({ onSignUp }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
     const [role, setRole] = useState('student');
     const [showPassword, setShowPassword] = useState(false);
-    const [remember, setRemember] = useState(false);
 
     const [touched, setTouched] = useState({});
     const [errors, setErrors] = useState({});
@@ -14,6 +14,9 @@ const LoginForm = ({ onLogin }) => {
 
     const validate = () => {
         const e = {};
+        if (!name.trim()) {
+            e.name = 'Name is required';
+        }
         if (!email.trim()) {
             e.email = 'Email is required';
         } else if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -29,7 +32,7 @@ const LoginForm = ({ onLogin }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setTouched({ email: true, password: true });
+        setTouched({ name: true, email: true, password: true });
         const v = validate();
         setErrors(v);
         if (Object.keys(v).length) return;
@@ -37,7 +40,7 @@ const LoginForm = ({ onLogin }) => {
         setLoading(true);
         setSubmitError('');
         try {
-            const result = onLogin?.({ email, password, role, remember });
+            const result = onSignUp?.({ name, email, password, role });
             if (result && typeof result.then === 'function') {
                 await result;
             }
@@ -100,6 +103,9 @@ const LoginForm = ({ onLogin }) => {
         </svg>
     );
 
+    // New image for sign up
+    const imageUrl = "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80";
+
     return (
         <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
             {/* Large screens: side-by-side layout */}
@@ -113,7 +119,7 @@ const LoginForm = ({ onLogin }) => {
                 <div
                     style={{
                         flex: 1,
-                        backgroundImage: `linear-gradient(135deg, rgba(202, 240, 248, 0.8) 0%, rgba(144, 224, 239, 0.8) 50%, rgba(0, 180, 216, 0.8) 100%), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1471&q=80')`,
+                        backgroundImage: `linear-gradient(135deg, rgba(202, 240, 248, 0.8) 0%, rgba(144, 224, 239, 0.8) 50%, rgba(0, 180, 216, 0.8) 100%), url('${imageUrl}')`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         minHeight: '100vh',
@@ -138,7 +144,7 @@ const LoginForm = ({ onLogin }) => {
                                 border: '1px solid rgba(255, 255, 255, 0.3)',
                             }}
                         >
-                            <span style={{ fontSize: '48px' }}>🎓</span>
+                            <span style={{ fontSize: '48px' }}>🚀</span>
                         </div>
                         <h1 style={{ 
                             fontSize: '48px', 
@@ -149,10 +155,10 @@ const LoginForm = ({ onLogin }) => {
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
                         }}>
-                            Level Up Your Learning
+                            Start Your Learning Journey
                         </h1>
                         <p style={{ fontSize: '20px', opacity: 0.9, lineHeight: 1.6 }}>
-                            Join thousands of students and teachers transforming education through interactive learning experiences.
+                            Create your account and unlock a world of interactive education.
                         </p>
                     </div>
                 </div>
@@ -168,12 +174,12 @@ const LoginForm = ({ onLogin }) => {
                         minHeight: '100vh',
                     }}
                 >
-                    <LoginFormContent 
+                    <SignUpFormContent 
                         {...{
-                            email, setEmail, password, setPassword, role, setRole,
-                            showPassword, setShowPassword, remember, setRemember,
+                            name, setName, email, setEmail, password, setPassword, role, setRole,
+                            showPassword, setShowPassword,
                             touched, errors, submitError, loading,
-                            handleSubmit, onBlur, validate,
+                            handleSubmit, onBlur,
                             MailIcon, LockIcon, EyeIcon, EyeOffIcon, UserIcon, GraduationCapIcon
                         }}
                     />
@@ -191,7 +197,7 @@ const LoginForm = ({ onLogin }) => {
                 <div
                     style={{
                         minHeight: '40vh',
-                        backgroundImage: `linear-gradient(135deg, rgba(202, 240, 248, 0.8) 0%, rgba(144, 224, 239, 0.8) 50%, rgba(0, 180, 216, 0.8) 100%), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1471&q=80')`,
+                        backgroundImage: `linear-gradient(135deg, rgba(202, 240, 248, 0.8) 0%, rgba(144, 224, 239, 0.8) 50%, rgba(0, 180, 216, 0.8) 100%), url('${imageUrl}')`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         display: 'flex',
@@ -216,7 +222,7 @@ const LoginForm = ({ onLogin }) => {
                                 border: '1px solid rgba(255, 255, 255, 0.3)',
                             }}
                         >
-                            <span style={{ fontSize: '32px' }}>🎓</span>
+                            <span style={{ fontSize: '32px' }}>🚀</span>
                         </div>
                         <h1 style={{ 
                             fontSize: '28px', 
@@ -224,22 +230,22 @@ const LoginForm = ({ onLogin }) => {
                             margin: '0 0 8px 0',
                             textShadow: '0 2px 4px rgba(0,0,0,0.1)'
                         }}>
-                            Welcome Back
+                            Create Account
                         </h1>
                         <p style={{ fontSize: '16px', opacity: 0.9 }}>
-                            Sign in to continue your learning journey
+                            Sign up and start learning today!
                         </p>
                     </div>
                 </div>
 
                 <div style={{ background: '#ffffff', padding: '40px 20px', minHeight: '60vh' }}>
                     <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-                        <LoginFormContent 
+                        <SignUpFormContent 
                             {...{
-                                email, setEmail, password, setPassword, role, setRole,
-                                showPassword, setShowPassword, remember, setRemember,
+                                name, setName, email, setEmail, password, setPassword, role, setRole,
+                                showPassword, setShowPassword,
                                 touched, errors, submitError, loading,
-                                handleSubmit, onBlur, validate,
+                                handleSubmit, onBlur,
                                 MailIcon, LockIcon, EyeIcon, EyeOffIcon, UserIcon, GraduationCapIcon
                             }}
                         />
@@ -268,9 +274,9 @@ const LoginForm = ({ onLogin }) => {
 };
 
 // Extracted form component for reuse
-const LoginFormContent = ({ 
-    email, setEmail, password, setPassword, role, setRole,
-    showPassword, setShowPassword, remember, setRemember,
+const SignUpFormContent = ({ 
+    name, setName, email, setEmail, password, setPassword, role, setRole,
+    showPassword, setShowPassword,
     touched, errors, submitError, loading,
     handleSubmit, onBlur,
     MailIcon, LockIcon, EyeIcon, EyeOffIcon, UserIcon, GraduationCapIcon
@@ -283,14 +289,66 @@ const LoginFormContent = ({
                 color: '#03045E', 
                 margin: '0 0 8px 0' 
             }}>
-                Sign In
+                Sign Up
             </h2>
             <p style={{ color: '#6b7280', margin: 0 }}>
-                Enter your credentials to access your account
+                Create your account to get started
             </p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div>
+                <label
+                    htmlFor="name"
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        color: '#03045E',
+                        marginBottom: '8px',
+                    }}
+                >
+                    <UserIcon />
+                    Full Name
+                </label>
+                <input
+                    id="name"
+                    type="text"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onBlur={() => onBlur('name')}
+                    style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        borderRadius: '8px',
+                        border: `2px solid ${
+                            touched.name && errors.name ? '#ef4444' : '#e5e7eb'
+                        }`,
+                        fontSize: '16px',
+                        background: '#ffffff',
+                        transition: 'all 0.2s ease',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                    }}
+                    onFocus={(e) => {
+                        e.target.style.borderColor = '#0077B6';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(0, 119, 182, 0.1)';
+                    }}
+                    onBlurCapture={(e) => {
+                        e.target.style.borderColor = touched.name && errors.name ? '#ef4444' : '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                    }}
+                />
+                {touched.name && errors.name && (
+                    <div style={{ color: '#ef4444', fontSize: '14px', marginTop: '6px' }}>
+                        {errors.name}
+                    </div>
+                )}
+            </div>
+
             <div>
                 <label
                     htmlFor="email"
@@ -344,36 +402,21 @@ const LoginFormContent = ({
             </div>
 
             <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <label 
-                        htmlFor="password" 
-                        style={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: '8px', 
-                            fontSize: '14px', 
-                            fontWeight: '600', 
-                            color: '#03045E' 
-                        }}
-                    >
-                        <LockIcon />
-                        Password
-                    </label>
-                    <button
-                        type="button"
-                        onClick={() => alert('Forgot password feature coming soon')}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            color: '#0077B6',
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            fontWeight: '500',
-                        }}
-                    >
-                        Forgot password?
-                    </button>
-                </div>
+                <label 
+                    htmlFor="password" 
+                    style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px', 
+                        fontSize: '14px', 
+                        fontWeight: '600', 
+                        color: '#03045E',
+                        marginBottom: '8px'
+                    }}
+                >
+                    <LockIcon />
+                    Password
+                </label>
                 <div style={{ position: 'relative' }}>
                     <input
                         id="password"
@@ -476,28 +519,6 @@ const LoginFormContent = ({
                 </div>
             </div>
 
-            <label style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '12px', 
-                fontSize: '14px', 
-                color: '#03045E', 
-                cursor: 'pointer' 
-            }}>
-                <input
-                    type="checkbox"
-                    checked={remember}
-                    onChange={(e) => setRemember(e.target.checked)}
-                    style={{
-                        width: '18px',
-                        height: '18px',
-                        accentColor: '#0077B6',
-                        cursor: 'pointer',
-                    }}
-                />
-                Remember me for 30 days
-            </label>
-
             {submitError && (
                 <div
                     role="alert"
@@ -561,10 +582,10 @@ const LoginFormContent = ({
                                 animation: 'spin 0.8s linear infinite',
                             }}
                         />
-                        Signing in...
+                        Signing up...
                     </>
                 ) : (
-                    'Sign In'
+                    'Sign Up'
                 )}
             </button>
         </form>
@@ -575,7 +596,7 @@ const LoginFormContent = ({
             fontSize: '14px', 
             color: '#6b7280' 
         }}>
-            Don't have an account?{' '}
+            Already have an account?{' '}
             <a
                 href="#"
                 style={{
@@ -584,10 +605,10 @@ const LoginFormContent = ({
                     fontWeight: '600',
                 }}
             >
-                Create account
+                Sign in
             </a>
         </div>
     </div>
 );
 
-export default LoginForm;
+export default SignUpForm;

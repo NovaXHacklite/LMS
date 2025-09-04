@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import LandingPage from './pages/LandingPage';
 import StudentPage from './pages/StudentPage';
 import TeacherPage from './pages/TeacherPage';
-
+import LoginForm from './components/LoginForm';
+import SignUpForm from './components/SignUpForm';
 function App() {
     const [user, setUser] = useState(null);
 
@@ -18,6 +19,8 @@ function App() {
                 <Route path="/" element={user ? (
                     user.role === 'student' ? <Navigate to="/student" /> : <Navigate to="/teacher" />
                 ) : <LandingPage onLogin={handleLogin} />} />
+                <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
+                <Route path="/signup" element={<SignUpForm onSignUp={handleLogin} />} />
                 <Route path="/student" element={user && user.role === 'student' ? <StudentPage user={user} /> : <Navigate to="/" />} />
                 <Route path="/teacher" element={user && user.role === 'teacher' ? <TeacherPage user={user} /> : <Navigate to="/" />} />
             </Routes>
