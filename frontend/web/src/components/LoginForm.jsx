@@ -1,44 +1,45 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../services/AuthContext';
 
 const icons = {
     Mail: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
         </svg>
     ),
     Lock: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <circle cx="12" cy="16" r="1"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <circle cx="12" cy="16" r="1" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
         </svg>
     ),
     Eye: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
         </svg>
     ),
     EyeOff: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-            <line x1="1" y1="1" x2="23" y2="23"/>
-            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+            <line x1="1" y1="1" x2="23" y2="23" />
+            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
         </svg>
     ),
     User: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
         </svg>
     ),
     Graduation: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
         </svg>
     ),
 };
@@ -46,9 +47,9 @@ const icons = {
 const validate = (email, password) => {
     const e = {};
     if (!email.trim()) e.email = 'Email is required';
-    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = 'Please enter a valid email';
+    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = 'Please enter a valid email address';
     if (!password) e.password = 'Password is required';
-    else if (password.length < 6) e.password = 'Password must be at least 6 characters';
+    else if (password.length < 6) e.password = 'Password must be at least 6 characters long';
     return e;
 };
 
@@ -56,7 +57,7 @@ const LoginFormContent = ({
     email, setEmail, password, setPassword, role, setRole,
     showPassword, setShowPassword, remember, setRemember,
     touched, errors, submitError, loading,
-    handleSubmit, onBlur,
+    handleSubmit, onBlur, idPrefix = ""
 }) => (
     <div className="w-full max-w-[400px]">
         <div className="mb-8">
@@ -65,19 +66,18 @@ const LoginFormContent = ({
         </div>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
             <div>
-                <label htmlFor="email" className="flex items-center gap-2 text-[14px] font-semibold text-[#03045E] mb-2">
+                <label htmlFor={`${idPrefix}email`} className="flex items-center gap-2 text-[14px] font-semibold text-[#03045E] mb-2">
                     {icons.Mail} Email Address
                 </label>
                 <input
-                    id="email"
+                    id={`${idPrefix}email`}
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     onBlur={() => onBlur('email')}
-                    className={`w-full p-3 rounded-lg border-2 text-[16px] bg-white transition-all outline-none box-border ${
-                        touched.email && errors.email ? 'border-[#ef4444]' : 'border-[#e5e7eb]'
-                    } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
+                    className={`w-full p-3 rounded-lg border-2 text-[16px] bg-white transition-all outline-none box-border ${touched.email && errors.email ? 'border-[#ef4444]' : 'border-[#e5e7eb]'
+                        } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
                 />
                 {touched.email && errors.email && (
                     <div className="text-[#ef4444] text-[14px] mt-1">{errors.email}</div>
@@ -85,7 +85,7 @@ const LoginFormContent = ({
             </div>
             <div>
                 <div className="flex justify-between items-center mb-2">
-                    <label htmlFor="password" className="flex items-center gap-2 text-[14px] font-semibold text-[#03045E]">
+                    <label htmlFor={`${idPrefix}password`} className="flex items-center gap-2 text-[14px] font-semibold text-[#03045E]">
                         {icons.Lock} Password
                     </label>
                     <button
@@ -98,15 +98,14 @@ const LoginFormContent = ({
                 </div>
                 <div className="relative">
                     <input
-                        id="password"
+                        id={`${idPrefix}password`}
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         onBlur={() => onBlur('password')}
-                        className={`w-full pr-12 pl-4 py-3 rounded-lg border-2 text-[16px] bg-white transition-all outline-none box-border ${
-                            touched.password && errors.password ? 'border-[#ef4444]' : 'border-[#e5e7eb]'
-                        } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
+                        className={`w-full pr-12 pl-4 py-3 rounded-lg border-2 text-[16px] bg-white transition-all outline-none box-border ${touched.password && errors.password ? 'border-[#ef4444]' : 'border-[#e5e7eb]'
+                            } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
                     />
                     <button
                         type="button"
@@ -133,11 +132,10 @@ const LoginFormContent = ({
                             key={r.key}
                             type="button"
                             onClick={() => setRole(r.key)}
-                            className={`flex-1 p-3 rounded-lg border-2 font-semibold text-[14px] cursor-pointer flex items-center justify-center gap-2 transition-all ${
-                                role === r.key
-                                    ? 'border-[#0077B6] bg-[#e8f4fd] text-[#0077B6]'
-                                    : 'border-[#e5e7eb] bg-white text-[#6b7280]'
-                            }`}
+                            className={`flex-1 p-3 rounded-lg border-2 font-semibold text-[14px] cursor-pointer flex items-center justify-center gap-2 transition-all ${role === r.key
+                                ? 'border-[#0077B6] bg-[#e8f4fd] text-[#0077B6]'
+                                : 'border-[#e5e7eb] bg-white text-[#6b7280]'
+                                }`}
                         >
                             {r.icon} {r.label}
                         </button>
@@ -161,11 +159,10 @@ const LoginFormContent = ({
             <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3.5 rounded-lg border-none font-semibold text-[16px] flex items-center justify-center gap-2 transition-all ${
-                    loading
-                        ? 'bg-gradient-to-r from-[#0077B6aa] to-[#03045Eaa] cursor-not-allowed'
-                        : 'bg-gradient-to-r from-[#0077B6] to-[#03045E] cursor-pointer shadow-[0_4px_12px_rgba(3,4,94,0.3)] hover:shadow-[0_6px_20px_rgba(3,4,94,0.4)] hover:-translate-y-[1px]'
-                } text-white`}
+                className={`w-full py-3.5 rounded-lg border-none font-semibold text-[16px] flex items-center justify-center gap-2 transition-all ${loading
+                    ? 'bg-gradient-to-r from-[#0077B6aa] to-[#03045Eaa] cursor-not-allowed'
+                    : 'bg-gradient-to-r from-[#0077B6] to-[#03045E] cursor-pointer shadow-[0_4px_12px_rgba(3,4,94,0.3)] hover:shadow-[0_6px_20px_rgba(3,4,94,0.4)] hover:-translate-y-[1px]'
+                    } text-white`}
             >
                 {loading ? (
                     <>
@@ -179,14 +176,14 @@ const LoginFormContent = ({
         </form>
         <div className="text-center mt-6 text-[14px] text-[#6b7280]">
             Don't have an account?{' '}
-            <a href="#" className="text-[#0077B6] no-underline font-semibold">
+            <Link to="/signup" className="text-[#0077B6] no-underline font-semibold hover:underline">
                 Create account
-            </a>
+            </Link>
         </div>
     </div>
 );
 
-const LoginForm = ({ onLogin }) => {
+const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('student');
@@ -194,35 +191,84 @@ const LoginForm = ({ onLogin }) => {
     const [remember, setRemember] = useState(false);
     const [touched, setTouched] = useState({});
     const [errors, setErrors] = useState({});
-    const [submitError, setSubmitError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate(); // <-- Add this
+    const navigate = useNavigate();
 
-    const handleSubmit = async e => {
+    // Use authentication context
+    const { login, isLoading, error: authError, clearError, isAuthenticated, user: authUser } = useAuth();
+    const [submitError, setSubmitError] = useState('');
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        console.log('LoginForm useEffect: isAuthenticated =', isAuthenticated, 'user role from auth =', authUser?.role, 'form role =', role);
+        if (isAuthenticated && authUser) {
+            const userRole = authUser.role || role; // Use authenticated user's role, fallback to form role
+            const targetRoute = userRole === 'teacher' ? '/teacher' : '/student';
+            console.log('Redirecting to:', targetRoute, 'based on role:', userRole);
+            navigate(targetRoute);
+        }
+    }, [isAuthenticated, role, navigate, authUser]);
+
+    // Clear errors when component mounts or when user starts typing
+    useEffect(() => {
+        clearError();
+    }, []); // Empty dependency array to run only once
+
+    // Handle auth error changes
+    useEffect(() => {
+        if (authError) {
+            setSubmitError(authError);
+        }
+    }, [authError]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setTouched({ email: true, password: true });
-        const v = validate(email, password);
-        setErrors(v);
-        if (Object.keys(v).length) return;
-        setLoading(true);
+
+        // Clear previous errors
         setSubmitError('');
+        clearError();
+
+        // Validate form
+        setTouched({ email: true, password: true });
+        const validationErrors = validate(email, password);
+        setErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length) {
+            return;
+        }
+
         try {
-            const result = onLogin?.({ email, password, role, remember });
-            if (result && typeof result.then === 'function') await result;
-            // Redirect after login
-            if (role === 'student') {
-                navigate('/student');
-            } else if (role === 'teacher') {
-                navigate('/teacher');
+            // Attempt login
+            console.log('Attempting login with credentials:', { email: email.trim(), role });
+
+            await login({
+                email: email.trim(),
+                password,
+                role
+            });
+
+            // Navigation will be handled by the useEffect above
+            console.log('Login successful, checking authentication state...');
+            console.log('isAuthenticated after login:', isAuthenticated);
+
+        } catch (error) {
+            console.error('Login failed:', error.message);
+
+            // Check if error indicates user doesn't exist
+            if (error.message.toLowerCase().includes('user not found') ||
+                error.message.toLowerCase().includes('user does not exist') ||
+                error.message.toLowerCase().includes('no user found')) {
+
+                // Redirect to signup page
+                alert('User not found. Please create an account first.');
+                navigate('/signup');
+            } else {
+                // Show other errors normally
+                setSubmitError(error.message || 'Login failed. Please try again.');
             }
-        } catch (err) {
-            setSubmitError(err?.message || 'Something went wrong. Please try again.');
-        } finally {
-            setLoading(false);
         }
     };
 
-    const onBlur = field => {
+    const onBlur = (field) => {
         setTouched(t => ({ ...t, [field]: true }));
         setErrors(validate(email, password));
     };
@@ -252,8 +298,8 @@ const LoginForm = ({ onLogin }) => {
                         {...{
                             email, setEmail, password, setPassword, role, setRole,
                             showPassword, setShowPassword, remember, setRemember,
-                            touched, errors, submitError, loading,
-                            handleSubmit, onBlur,
+                            touched, errors, submitError, loading: isLoading,
+                            handleSubmit, onBlur, idPrefix: "desktop-"
                         }}
                     />
                 </div>
@@ -278,8 +324,8 @@ const LoginForm = ({ onLogin }) => {
                             {...{
                                 email, setEmail, password, setPassword, role, setRole,
                                 showPassword, setShowPassword, remember, setRemember,
-                                touched, errors, submitError, loading,
-                                handleSubmit, onBlur,
+                                touched, errors, submitError, loading: isLoading,
+                                handleSubmit, onBlur, idPrefix: "mobile-"
                             }}
                         />
                     </div>

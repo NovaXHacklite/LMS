@@ -1,43 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../services/AuthContext';
 
 const icons = {
     Mail: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
         </svg>
     ),
     Lock: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <circle cx="12" cy="16" r="1"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <circle cx="12" cy="16" r="1" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
         </svg>
     ),
     Eye: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
         </svg>
     ),
     EyeOff: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-            <line x1="1" y1="1" x2="23" y2="23"/>
-            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+            <line x1="1" y1="1" x2="23" y2="23" />
+            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
         </svg>
     ),
     User: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
         </svg>
     ),
     Graduation: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
         </svg>
     ),
 };
@@ -46,47 +48,110 @@ const imageUrl = "https://images.unsplash.com/photo-1513258496099-48168024aec0?a
 
 const validate = ({ name, email, password }) => {
     const e = {};
-    if (!name.trim()) e.name = 'Name is required';
+    if (!name.trim()) e.name = 'Full name is required';
+    else if (name.trim().length < 2) e.name = 'Name must be at least 2 characters long';
     if (!email.trim()) e.email = 'Email is required';
-    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = 'Please enter a valid email';
+    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = 'Please enter a valid email address';
     if (!password) e.password = 'Password is required';
-    else if (password.length < 6) e.password = 'Password must be at least 6 characters';
+    else if (password.length < 6) e.password = 'Password must be at least 6 characters long';
+    else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) e.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
     return e;
 };
 
-const SignUpForm = ({ onSignUp }) => {
-    const [form, setForm] = useState({ email: '', password: '', name: '', role: 'student' });
+const SignUpForm = () => {
+    const [form, setForm] = useState({
+        email: '',
+        password: '',
+        name: '',
+        role: 'student',
+        grade: '',
+        subject: ''
+    });
     const [showPassword, setShowPassword] = useState(false);
     const [touched, setTouched] = useState({});
     const [errors, setErrors] = useState({});
-    const [submitError, setSubmitError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-    const handleRole = role => setForm(f => ({ ...f, role }));
-    const handleBlur = field => {
-        setTouched(t => ({ ...t, [field]: true }));
-        setErrors(validate(form));
-    };
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setTouched({ name: true, email: true, password: true });
-        const v = validate(form);
-        setErrors(v);
-        if (Object.keys(v).length) return;
-        setLoading(true);
-        setSubmitError('');
-        try {
-            const result = onSignUp?.(form);
-            if (result && typeof result.then === 'function') await result;
-        } catch (err) {
-            setSubmitError(err?.message || 'Something went wrong. Please try again.');
-        } finally {
-            setLoading(false);
+    // Use authentication context
+    const { register, isLoading, error: authError, clearError, isAuthenticated } = useAuth();
+    const [submitError, setSubmitError] = useState('');
+
+    // Clear errors when component mounts
+    useEffect(() => {
+        clearError();
+    }, []); // Empty dependency array to run only once
+
+    // Handle auth error changes
+    useEffect(() => {
+        if (authError) {
+            setSubmitError(authError);
+        }
+    }, [authError]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm(f => ({ ...f, [name]: value }));
+
+        // Clear field error when user starts typing
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: '' }));
         }
     };
 
-    const FormContent = (
+    const handleRole = (role) => {
+        setForm(f => ({ ...f, role }));
+        // Reset role-specific fields when role changes
+        if (role === 'student') {
+            setForm(f => ({ ...f, subject: '' }));
+        } else {
+            setForm(f => ({ ...f, grade: '' }));
+        }
+    };
+
+    const handleBlur = (field) => {
+        setTouched(t => ({ ...t, [field]: true }));
+        setErrors(validate(form));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Clear previous errors
+        setSubmitError('');
+        clearError();
+
+        // Validate form
+        setTouched({ name: true, email: true, password: true });
+        const validationErrors = validate(form);
+        setErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length) {
+            return;
+        }
+
+        try {
+            // Attempt registration
+            await register({
+                name: form.name.trim(),
+                email: form.email.trim(),
+                password: form.password,
+                role: form.role,
+                ...(form.role === 'student' && form.grade && { grade: form.grade }),
+                ...(form.role === 'teacher' && form.subject && { subject: form.subject })
+            });
+
+            // Show success message and redirect to login
+            alert('Registration successful! Please login with your credentials.');
+            navigate('/login');
+
+        } catch (error) {
+            // Error handling is managed by the auth context
+            console.error('Registration failed:', error.message);
+            setSubmitError(error.message || 'Registration failed. Please try again.');
+        }
+    };
+
+    const FormContent = ({ idPrefix = "" }) => (
         <div className="w-full max-w-[400px]">
             <div className="mb-8">
                 <h2 className="text-2xl font-bold text-[#03045E] mb-2">Sign Up</h2>
@@ -95,20 +160,19 @@ const SignUpForm = ({ onSignUp }) => {
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
                 {/* Name */}
                 <div>
-                    <label htmlFor="name" className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
+                    <label htmlFor={`${idPrefix}name`} className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
                         {icons.User} Full Name
                     </label>
                     <input
-                        id="name"
+                        id={`${idPrefix}name`}
                         name="name"
                         type="text"
                         placeholder="Enter your name"
                         value={form.name}
                         onChange={handleChange}
                         onBlur={() => handleBlur('name')}
-                        className={`w-full px-4 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border ${
-                            touched.name && errors.name ? 'border-red-500' : 'border-gray-200'
-                        } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
+                        className={`w-full px-4 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border ${touched.name && errors.name ? 'border-red-500' : 'border-gray-200'
+                            } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
                     />
                     {touched.name && errors.name && (
                         <div className="text-red-500 text-sm mt-1">{errors.name}</div>
@@ -116,20 +180,19 @@ const SignUpForm = ({ onSignUp }) => {
                 </div>
                 {/* Email */}
                 <div>
-                    <label htmlFor="email" className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
+                    <label htmlFor={`${idPrefix}email`} className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
                         {icons.Mail} Email Address
                     </label>
                     <input
-                        id="email"
+                        id={`${idPrefix}email`}
                         name="email"
                         type="email"
                         placeholder="Enter your email"
                         value={form.email}
                         onChange={handleChange}
                         onBlur={() => handleBlur('email')}
-                        className={`w-full px-4 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border ${
-                            touched.email && errors.email ? 'border-red-500' : 'border-gray-200'
-                        } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
+                        className={`w-full px-4 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border ${touched.email && errors.email ? 'border-red-500' : 'border-gray-200'
+                            } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
                     />
                     {touched.email && errors.email && (
                         <div className="text-red-500 text-sm mt-1">{errors.email}</div>
@@ -137,21 +200,20 @@ const SignUpForm = ({ onSignUp }) => {
                 </div>
                 {/* Password */}
                 <div>
-                    <label htmlFor="password" className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
+                    <label htmlFor={`${idPrefix}password`} className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
                         {icons.Lock} Password
                     </label>
                     <div className="relative">
                         <input
-                            id="password"
+                            id={`${idPrefix}password`}
                             name="password"
                             type={showPassword ? 'text' : 'password'}
                             placeholder="Enter your password"
                             value={form.password}
                             onChange={handleChange}
                             onBlur={() => handleBlur('password')}
-                            className={`w-full px-4 pr-12 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border ${
-                                touched.password && errors.password ? 'border-red-500' : 'border-gray-200'
-                            } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
+                            className={`w-full px-4 pr-12 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border ${touched.password && errors.password ? 'border-red-500' : 'border-gray-200'
+                                } focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]`}
                         />
                         <button
                             type="button"
@@ -188,6 +250,55 @@ const SignUpForm = ({ onSignUp }) => {
                         ))}
                     </div>
                 </div>
+
+                {/* Conditional Fields based on Role */}
+                {form.role === 'student' && (
+                    <div>
+                        <label htmlFor="grade" className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
+                            {icons.Graduation} Grade Level
+                        </label>
+                        <select
+                            id="grade"
+                            name="grade"
+                            value={form.grade}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border border-gray-200 focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]"
+                        >
+                            <option value="">Select Grade Level (Optional)</option>
+                            <option value="elementary">Elementary (K-5)</option>
+                            <option value="middle">Middle School (6-8)</option>
+                            <option value="high">High School (9-12)</option>
+                            <option value="college">College/University</option>
+                            <option value="graduate">Graduate School</option>
+                        </select>
+                    </div>
+                )}
+
+                {form.role === 'teacher' && (
+                    <div>
+                        <label htmlFor="subject" className="flex items-center gap-2 text-sm font-semibold text-[#03045E] mb-2">
+                            {icons.User} Subject Area
+                        </label>
+                        <select
+                            id="subject"
+                            name="subject"
+                            value={form.subject}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 rounded-lg border-2 text-base bg-white transition-all outline-none box-border border-gray-200 focus:border-[#0077B6] focus:shadow-[0_0_0_3px_rgba(0,119,182,0.1)]"
+                        >
+                            <option value="">Select Subject Area (Optional)</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="science">Science</option>
+                            <option value="english">English/Language Arts</option>
+                            <option value="history">History/Social Studies</option>
+                            <option value="foreign_language">Foreign Language</option>
+                            <option value="arts">Arts</option>
+                            <option value="physical_education">Physical Education</option>
+                            <option value="computer_science">Computer Science</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                )}
                 {/* Error */}
                 {submitError && (
                     <div role="alert" className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-500 text-sm">
@@ -197,14 +308,14 @@ const SignUpForm = ({ onSignUp }) => {
                 {/* Submit */}
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={isLoading}
                     className={`w-full py-3 rounded-lg border-none font-semibold text-base cursor-pointer flex items-center justify-center gap-2 transition-all
                         text-white shadow-lg
-                        ${loading
+                        ${isLoading
                             ? 'bg-gradient-to-r from-[#0077B6aa] to-[#03045Eaa] cursor-not-allowed shadow-none'
                             : 'bg-gradient-to-r from-[#0077B6] to-[#03045E] hover:-translate-y-0.5 hover:shadow-xl'}`}
                 >
-                    {loading ? (
+                    {isLoading ? (
                         <>
                             <div className="w-5 h-5 border-2 border-white border-t-white/80 rounded-full animate-spin" />
                             Signing up...
@@ -214,7 +325,9 @@ const SignUpForm = ({ onSignUp }) => {
             </form>
             <div className="text-center mt-6 text-sm text-gray-500">
                 Already have an account?{' '}
-                <a href="#" className="text-[#0077B6] font-semibold no-underline">Sign in</a>
+                <Link to="/login" className="text-[#0077B6] font-semibold no-underline hover:underline">
+                    Sign in
+                </Link>
             </div>
         </div>
     );
@@ -244,7 +357,7 @@ const SignUpForm = ({ onSignUp }) => {
                     </div>
                 </div>
                 <div className="flex-1 bg-white flex items-center justify-center p-10 min-h-screen">
-                    {FormContent}
+                    <FormContent idPrefix="desktop-" />
                 </div>
             </div>
             {/* Small/medium screens */}
@@ -268,7 +381,7 @@ const SignUpForm = ({ onSignUp }) => {
                     </div>
                 </div>
                 <div className="bg-white p-10 pt-5 min-h-[60vh]">
-                    <div className="max-w-[400px] mx-auto">{FormContent}</div>
+                    <div className="max-w-[400px] mx-auto"><FormContent idPrefix="mobile-" /></div>
                 </div>
             </div>
         </div>

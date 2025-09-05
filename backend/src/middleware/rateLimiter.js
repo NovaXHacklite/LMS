@@ -32,8 +32,8 @@ const standardLimiter = createRateLimit(
 
 // Strict rate limiter for authentication endpoints
 const authLimiter = createRateLimit(
-    15 * 60 * 1000, // 15 minutes
-    5, // 5 attempts
+    5 * 60 * 1000, // 5 minutes (reduced from 15)
+    50, // 50 attempts (increased from 5)
     'Too many authentication attempts, please try again later.'
 );
 
