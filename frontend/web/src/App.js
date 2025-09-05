@@ -22,8 +22,13 @@ function App() {
                 ) : <LandingPage onLogin={handleLogin} />} />
                 <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
                 <Route path="/signup" element={<SignUpForm onSignUp={handleLogin} />} />
-                <Route path="/student" element={user && user.role === 'student' ? <StudentPage user={user} /> : <Navigate to="/" />} />
-                <Route path="/teacher" element={user && user.role === 'teacher' ? <TeacherPage user={user} /> : <Navigate to="/" />} />
+                <Route path="/student" element={
+                    <StudentPage user={user} />
+                } />
+                <Route path="/teacher" element={
+                    <TeacherPage user={user} />
+                } />
+               
             </Routes>
         </Router>
     );
