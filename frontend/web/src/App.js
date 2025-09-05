@@ -6,6 +6,7 @@ import TeacherPage from './pages/TeacherPage';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import StudentDashboard from './components/student/StudentDashboard';
+
 function App() {
     const [user, setUser] = useState(null);
 
@@ -17,21 +18,17 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={user ? (
-                    user.role === 'student' ? <Navigate to="/student" /> : <Navigate to="/teacher" />
-                ) : <LandingPage onLogin={handleLogin} />} />
+                {/* Updated this line to always show LandingPage */}
+                <Route path="/" element={<LandingPage onLogin={handleLogin} />} />
+
                 <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
                 <Route path="/signup" element={<SignUpForm onSignUp={handleLogin} />} />
-                <Route path="/student" element={
-                    <StudentPage user={user} />
-                } />
-                <Route path="/teacher" element={
-                    <TeacherPage user={user} />
-                } />
-               
+                <Route path="/student" element={<StudentPage user={user} />} />
+                <Route path="/teacher" element={<TeacherPage user={user} />} />
             </Routes>
         </Router>
     );
 }
 
 export default App;
+
