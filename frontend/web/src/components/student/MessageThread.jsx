@@ -1,11 +1,12 @@
 import React from 'react';
 
-const MessageThread = ({ userId }) => (
-    <div className="message-thread">
-        <h3>Messages</h3>
-        {/* Messaging UI placeholder */}
-        <div>Messages for user {userId}</div>
+const MessageThread = () => {
+  return (
+    <div>
+      <h2>Message Thread</h2>
+      {/* Add your message thread UI here */}
     </div>
-);
+  );
+};
 
 export default MessageThread;

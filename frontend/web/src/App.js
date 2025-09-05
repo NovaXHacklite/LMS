@@ -5,6 +5,7 @@ import StudentPage from './pages/StudentPage';
 import TeacherPage from './pages/TeacherPage';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
+import StudentDashboard from './components/student/StudentDashboard';
 function App() {
     const [user, setUser] = useState(null);
 
