@@ -1,5 +1,5 @@
 import React from 'react';
-import MessageThread from './MessageThread';
+import MessageThread from '../MessageThread';
 
 const TeacherDashboard = ({ user }) => (
     <div className="dashboard teacher-dashboard">

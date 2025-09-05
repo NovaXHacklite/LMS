@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const icons = {
     Mail: (
@@ -195,6 +196,7 @@ const LoginForm = ({ onLogin }) => {
     const [errors, setErrors] = useState({});
     const [submitError, setSubmitError] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate(); // <-- Add this
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -207,6 +209,12 @@ const LoginForm = ({ onLogin }) => {
         try {
             const result = onLogin?.({ email, password, role, remember });
             if (result && typeof result.then === 'function') await result;
+            // Redirect after login
+            if (role === 'student') {
+                navigate('/student');
+            } else if (role === 'teacher') {
+                navigate('/teacher');
+            }
         } catch (err) {
             setSubmitError(err?.message || 'Something went wrong. Please try again.');
         } finally {
