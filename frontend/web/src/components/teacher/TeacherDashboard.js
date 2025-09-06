@@ -1,23 +1,36 @@
-import React from 'react';
-import MessageThread from '../student/MessageThread';
+import React, { useState } from 'react';
+import SubjectPanel from './SubjectPanel';
+import ChatPanel from './ChatPanel';
+import ProgressPanel from './ProgressPanel';
 
-const TeacherDashboard = ({ user }) => (
-    <div className="dashboard teacher-dashboard">
-        <h2>Welcome, {user?.name || 'Teacher'}!</h2>
-        {/* Uploads, analytics, messaging */}
-        <div className="dashboard-section">
-            <h3>Upload Materials</h3>
-            {/* Upload form placeholder */}
-            <input type="file" />
-            <button>Upload</button>
-        </div>
-        <div className="dashboard-section">
-            <h3>Analytics</h3>
-            {/* Analytics charts placeholder */}
-            <div style={{ height: 200, background: '#f0f0f0' }}>Analytics Chart</div>
-        </div>
-        <MessageThread userId={user?.id} />
+const TeacherDashboard = () => {
+  const [activeTab, setActiveTab] = useState('subject');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'subject':
+        return <SubjectPanel />;
+      case 'chat':
+        return <ChatPanel />;
+      case 'progress':
+        return <ProgressPanel />;
+      default:
+        return <SubjectPanel />;
+    }
+  };
+
+  return (
+    <div>
+      <h2>Teacher Dashboard</h2>
+      <div>
+        <button onClick={() => setActiveTab('subject')}>Subject</button>
+        <button onClick={() => setActiveTab('chat')}>Chat</button>
+        <button onClick={() => setActiveTab('progress')}>Progress</button>
+      </div>
+      <hr />
+      {renderContent()}
     </div>
-);
+  );
+};
 
 export default TeacherDashboard;
