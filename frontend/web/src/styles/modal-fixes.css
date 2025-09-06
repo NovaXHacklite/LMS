@@ -36,7 +36,7 @@
         max-width: 95vw !important;
         max-height: 90vh !important;
     }
-    
+
     .modal-scrollable {
         max-height: calc(90vh - 100px) !important;
     }

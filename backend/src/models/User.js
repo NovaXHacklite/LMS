@@ -99,7 +99,7 @@ const userSchema = new mongoose.Schema({
             type: Boolean,
             default: true
         },
-        
+
         // General preferences
         language: {
             type: String,
@@ -118,7 +118,7 @@ const userSchema = new mongoose.Schema({
             type: Boolean,
             default: true
         },
-        
+
         // Privacy settings
         profileVisibility: {
             type: String,

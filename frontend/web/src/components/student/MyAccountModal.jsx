@@ -41,7 +41,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
         newPassword: "",
         confirmPassword: "",
         twoFactorEnabled: false,
-        
+
         // Notifications
         emailNotifications: true,
         pushNotifications: true,
@@ -49,13 +49,13 @@ const MyAccountModal = ({ isOpen, onClose }) => {
         studyReminders: true,
         gradeAlerts: true,
         assignmentDeadlines: true,
-        
+
         // Preferences
         language: "English",
         theme: "light",
         soundEnabled: true,
         autoSave: true,
-        
+
         // Privacy
         profileVisibility: "friends",
         showEmail: false,
@@ -69,12 +69,12 @@ const MyAccountModal = ({ isOpen, onClose }) => {
         // Calculate password strength
         const password = formData.newPassword;
         let strength = 0;
-        
+
         if (password.length >= 8) strength += 25;
         if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
         if (/\d/.test(password)) strength += 25;
         if (/[^a-zA-Z0-9]/.test(password)) strength += 25;
-        
+
         setPasswordStrength(strength);
     }, [formData.newPassword]);
 
@@ -87,11 +87,11 @@ const MyAccountModal = ({ isOpen, onClose }) => {
         try {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
+
             // In a real app, you would call different endpoints based on the section
             // await updateProfile(formData);
             console.log(`${section} settings updated:`, formData);
-            
+
             // Show success message
         } catch (error) {
             console.error("Failed to update settings:", error);
@@ -170,11 +170,10 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
-                                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
-                                            activeTab === tab.id
+                                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${activeTab === tab.id
                                                 ? 'bg-blue-600 text-white'
                                                 : 'text-slate-600 hover:bg-slate-200'
-                                        }`}
+                                            }`}
                                     >
                                         <tab.icon className="w-5 h-5" />
                                         {tab.label}
@@ -190,14 +189,14 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                 <div className="space-y-6">
                                     <div>
                                         <h3 className="text-xl font-semibold text-slate-800 mb-4">Security Settings</h3>
-                                        
+
                                         {/* Change Password */}
                                         <div className="bg-slate-50 rounded-xl p-6 mb-6">
                                             <h4 className="text-lg font-medium text-slate-800 mb-4 flex items-center gap-2">
                                                 <Key className="w-5 h-5 text-blue-600" />
                                                 Change Password
                                             </h4>
-                                            
+
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div className="md:col-span-2">
                                                     <label className="block text-sm font-medium text-slate-600 mb-2">
@@ -241,18 +240,17 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                             {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                                         </button>
                                                     </div>
-                                                    
+
                                                     {/* Password Strength Indicator */}
                                                     {formData.newPassword && (
                                                         <div className="mt-2">
                                                             <div className="flex items-center justify-between mb-1">
                                                                 <span className="text-xs text-slate-600">Password Strength</span>
-                                                                <span className={`text-xs font-medium ${
-                                                                    passwordStrength <= 25 ? 'text-red-600' :
-                                                                    passwordStrength <= 50 ? 'text-orange-600' :
-                                                                    passwordStrength <= 75 ? 'text-yellow-600' :
-                                                                    'text-green-600'
-                                                                }`}>
+                                                                <span className={`text-xs font-medium ${passwordStrength <= 25 ? 'text-red-600' :
+                                                                        passwordStrength <= 50 ? 'text-orange-600' :
+                                                                            passwordStrength <= 75 ? 'text-yellow-600' :
+                                                                                'text-green-600'
+                                                                    }`}>
                                                                     {getPasswordStrengthText()}
                                                                 </span>
                                                             </div>
@@ -286,7 +284,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                             {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                                         </button>
                                                     </div>
-                                                    
+
                                                     {formData.confirmPassword && (
                                                         <div className="mt-2">
                                                             {formData.newPassword === formData.confirmPassword ? (
@@ -325,7 +323,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                 <Smartphone className="w-5 h-5 text-green-600" />
                                                 Two-Factor Authentication
                                             </h4>
-                                            
+
                                             <div className="flex items-center justify-between">
                                                 <div>
                                                     <p className="text-slate-600 mb-1">Add an extra layer of security to your account</p>
@@ -352,13 +350,13 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                             {activeTab === 'notifications' && (
                                 <div className="space-y-6">
                                     <h3 className="text-xl font-semibold text-slate-800 mb-4">Notification Preferences</h3>
-                                    
+
                                     <div className="bg-slate-50 rounded-xl p-6">
                                         <h4 className="text-lg font-medium text-slate-800 mb-4 flex items-center gap-2">
                                             <Bell className="w-5 h-5 text-blue-600" />
                                             Notification Types
                                         </h4>
-                                        
+
                                         <div className="space-y-4">
                                             {[
                                                 { key: 'emailNotifications', label: 'Email Notifications', desc: 'Receive notifications via email' },
@@ -385,7 +383,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                 </div>
                                             ))}
                                         </div>
-                                        
+
                                         <button
                                             onClick={() => handleSubmit('notifications')}
                                             disabled={loading}
@@ -406,14 +404,14 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                             {activeTab === 'preferences' && (
                                 <div className="space-y-6">
                                     <h3 className="text-xl font-semibold text-slate-800 mb-4">General Preferences</h3>
-                                    
+
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="bg-slate-50 rounded-xl p-6">
                                             <h4 className="text-lg font-medium text-slate-800 mb-4 flex items-center gap-2">
                                                 <Globe className="w-5 h-5 text-blue-600" />
                                                 Language & Region
                                             </h4>
-                                            
+
                                             <div className="space-y-4">
                                                 <div>
                                                     <label className="block text-sm font-medium text-slate-600 mb-2">
@@ -437,7 +435,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                 <Palette className="w-5 h-5 text-purple-600" />
                                                 Appearance
                                             </h4>
-                                            
+
                                             <div className="space-y-4">
                                                 <div>
                                                     <label className="block text-sm font-medium text-slate-600 mb-2">
@@ -451,11 +449,10 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                             <button
                                                                 key={theme.value}
                                                                 onClick={() => handleChange('theme', theme.value)}
-                                                                className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-colors ${
-                                                                    formData.theme === theme.value
+                                                                className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-colors ${formData.theme === theme.value
                                                                         ? 'border-blue-500 bg-blue-50'
                                                                         : 'border-slate-300 bg-white hover:border-slate-400'
-                                                                }`}
+                                                                    }`}
                                                             >
                                                                 <theme.icon className="w-4 h-4" />
                                                                 {theme.label}
@@ -463,7 +460,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div className="flex items-center justify-between">
                                                     <div>
                                                         <span className="text-sm font-medium text-slate-800">Sound Effects</span>
@@ -479,7 +476,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                         <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                                                     </label>
                                                 </div>
-                                                
+
                                                 <div className="flex items-center justify-between">
                                                     <div>
                                                         <span className="text-sm font-medium text-slate-800">Auto-save</span>
@@ -498,7 +495,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <button
                                         onClick={() => handleSubmit('preferences')}
                                         disabled={loading}
@@ -518,13 +515,13 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                             {activeTab === 'privacy' && (
                                 <div className="space-y-6">
                                     <h3 className="text-xl font-semibold text-slate-800 mb-4">Privacy Settings</h3>
-                                    
+
                                     <div className="bg-slate-50 rounded-xl p-6">
                                         <h4 className="text-lg font-medium text-slate-800 mb-4 flex items-center gap-2">
                                             <Eye className="w-5 h-5 text-purple-600" />
                                             Profile Visibility
                                         </h4>
-                                        
+
                                         <div className="space-y-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-slate-600 mb-2">
@@ -540,7 +537,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                     <option value="private">Only me</option>
                                                 </select>
                                             </div>
-                                            
+
                                             <div className="space-y-3">
                                                 {[
                                                     { key: 'showEmail', label: 'Show email address in profile' },
@@ -562,7 +559,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                                                 ))}
                                             </div>
                                         </div>
-                                        
+
                                         <button
                                             onClick={() => handleSubmit('privacy')}
                                             disabled={loading}
@@ -583,7 +580,7 @@ const MyAccountModal = ({ isOpen, onClose }) => {
                             {activeTab === 'data' && (
                                 <div className="space-y-6">
                                     <h3 className="text-xl font-semibold text-slate-800 mb-4">Data Management</h3>
-                                    
+
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="bg-green-50 rounded-xl p-6 border border-green-200">
                                             <h4 className="text-lg font-medium text-slate-800 mb-4 flex items-center gap-2">

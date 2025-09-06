@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Box, 
-  IconButton, 
-  Avatar, 
-  Menu, 
-  MenuItem, 
-  Badge, 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  IconButton,
+  Avatar,
+  Menu,
+  MenuItem,
+  Badge,
   InputBase,
   Tooltip
 } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import { 
-  Search as SearchIcon, 
-  Notifications as NotificationsIcon, 
-  Settings as SettingsIcon, 
-  AccountCircle, 
-  Logout, 
-  Person 
+import {
+  Search as SearchIcon,
+  Notifications as NotificationsIcon,
+  Settings as SettingsIcon,
+  AccountCircle,
+  Logout,
+  Person
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import ProfileModal from '../student/ProfileModal';
@@ -196,8 +196,8 @@ const Navbar = ({ userType = 'student', userName = 'User' }) => {
                 },
               }}
             >
-              <Badge 
-                badgeContent={3} 
+              <Badge
+                badgeContent={3}
                 sx={{
                   '& .MuiBadge-badge': {
                     backgroundColor: '#ef4444',
@@ -334,17 +334,17 @@ const Navbar = ({ userType = 'student', userName = 'User' }) => {
       </Toolbar>
 
       {/* Modals */}
-      <ProfileModal 
-        isOpen={profileModalOpen} 
-        onClose={() => setProfileModalOpen(false)} 
+      <ProfileModal
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
       />
-      <MyAccountModal 
-        isOpen={accountModalOpen} 
-        onClose={() => setAccountModalOpen(false)} 
+      <MyAccountModal
+        isOpen={accountModalOpen}
+        onClose={() => setAccountModalOpen(false)}
       />
-      <LogoutModal 
-        isOpen={logoutModalOpen} 
-        onClose={() => setLogoutModalOpen(false)} 
+      <LogoutModal
+        isOpen={logoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
       />
     </StyledAppBar>
   );

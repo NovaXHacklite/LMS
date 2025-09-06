@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease-out;
+}
+
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  background: #f9f9f9;
+}
+
+/* Dashboard Container */
+.dashboard {
+  @apply max-w-5xl mx-auto my-8 bg-white rounded-lg shadow-md p-8;
+}
+
+/* Tab Navigation */
+.tab-buttons {
+  @apply flex gap-4 mb-6;
+}
+
+.tab-buttons button {
+  @apply px-4 py-2 rounded-md bg-gray-200 text-gray-800 font-medium hover:bg-blue-500 hover:text-white transition;
+}
+
+.tab-buttons button.active {
+  @apply bg-blue-600 text-white;
+}
+
+/* Panel Wrapper */
+.panel {
+  @apply p-6 bg-white rounded-lg shadow-md animate-fadeIn;
+}
+
+/* Form Groups */
+.form-group {
+  @apply mb-4;
+}
+
+.form-group label {
+  @apply block font-semibold mb-2;
+}
+
+.form-group select,
+.form-group input[type="file"],
+.form-group textarea {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+/* Upload Section */
+.upload-section {
+  @apply mt-6 p-4 bg-gray-50 rounded-md border border-gray-200;
+}
+
+.upload-section h4 {
+  @apply text-lg font-semibold mb-4;
+}
+
+.upload-section button {
+  @apply mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600;
+}
+
+/* Chat Panel */
+.chat-box {
+  @apply mt-6 p-4 bg-gray-100 rounded-md border border-gray-300;
+}
+
+.chat-box textarea {
+  @apply w-full resize-y p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+.emoji-buttons {
+  @apply mt-2 flex gap-2;
+}
+
+.emoji-buttons button {
+  @apply text-xl bg-transparent border-none cursor-pointer hover:scale-110 transition;
+}
+
+/* Progress Panel */
+.progress-section {
+  @apply mt-6 p-4 bg-blue-50 rounded-md border border-blue-200;
+}
+
+.progress-chart {
+  @apply w-full h-72 bg-gray-300 flex items-center justify-center text-lg font-semibold rounded-md mb-4;
+}
+
+.comment-box textarea {
+  @apply w-full resize-y p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+.comment-box button {
+  @apply mt-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600;
+}

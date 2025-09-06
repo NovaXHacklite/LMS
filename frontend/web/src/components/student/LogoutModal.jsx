@@ -20,16 +20,16 @@ const LogoutModal = ({ isOpen, onClose }) => {
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
-        
+
         try {
             // Clear authentication data
             await logout();
-            
+
             // Add a small delay for the animation
             setTimeout(() => {
                 navigate('/auth/login');
             }, 1500);
-            
+
         } catch (error) {
             console.error("Logout error:", error);
             setIsLoggingOut(false);
@@ -80,7 +80,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
                                     </motion.div>
                                 </div>
                             </motion.div>
-                            
+
                             <motion.h3
                                 className="text-2xl font-bold text-slate-800 mb-2"
                                 initial={{ opacity: 0, y: 10 }}
@@ -89,7 +89,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
                             >
                                 {getGreeting()}, {user?.name || 'Student'}!
                             </motion.h3>
-                            
+
                             <motion.p
                                 className="text-slate-600 mb-4"
                                 initial={{ opacity: 0, y: 10 }}
@@ -98,7 +98,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
                             >
                                 Thank you for using EduLearn LMS. See you soon!
                             </motion.p>
-                            
+
                             <motion.div
                                 className="flex justify-center space-x-2"
                                 initial={{ opacity: 0, y: 10 }}
@@ -211,7 +211,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
                                 {/* Quick Actions */}
                                 <div className="mt-4 pt-4 border-t border-slate-200">
                                     <p className="text-xs text-slate-500 text-center">
-                                        Want to save your progress first? 
+                                        Want to save your progress first?
                                         <button className="text-blue-600 hover:text-blue-700 ml-1">
                                             Auto-save is enabled
                                         </button>

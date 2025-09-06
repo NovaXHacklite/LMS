@@ -67,50 +67,47 @@ const StyledListItemButton = styled(ListItemButton)(({ theme, selected }) => ({
   },
 }));
 
+
+//////////////////////////////////
+//////////////////////////////////
 const tabConfig = {
   teacher: [
-    { 
-      key: 'dashboard', 
-      label: 'Dashboard', 
+    {
+      key: 'home',
+      label: 'Home',
       icon: <DashboardIcon />,
       badge: null
     },
-    
-    { 
-      key: 'courses', 
-      label: 'My Courses', 
+    {
+      key: 'subject',
+      label: 'Subject',
       icon: <SchoolIcon />,
-      badge: 5,
-      children: [
-        { key: 'all-courses', label: 'All Courses', icon: <BookIcon /> },
-        { key: 'create-course', label: 'Create Course', icon: <SchoolIcon /> },
-      ]
-    },
-    { 
-      key: 'students', 
-      label: 'Students', 
-      icon: <GroupIcon />,
-      badge: 24
-    },
-    { 
-      key: 'assignments', 
-      label: 'Assignments', 
-      icon: <AssignmentIcon />,
-      badge: 3
-    },
-    { 
-      key: 'grades', 
-      label: 'Grades', 
-      icon: <GradeIcon />,
       badge: null
     },
-    { 
-      key: 'analytics', 
-      label: 'Analytics', 
+    {
+      key: 'notes',
+      label: 'Notes',
+      icon: <AssignmentIcon />,
+      badge: null
+    },
+    {
+      key: 'settings',
+      label: 'Settings',
+      icon: <FeedIcon />,
+      badge: null
+    },
+    {
+      key: 'calendar',
+      label: 'Calendar',
       icon: <BarChartIcon />,
       badge: null
     },
   ],
+////////////////////////////////////
+///////////////////////////////////
+
+
+    
   student: [
     { 
       key: 'dashboard', 
