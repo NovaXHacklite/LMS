@@ -3,16 +3,32 @@ const User = require('../models/User');
 const Analytics = require('../models/Analytics');
 const config = require('../config/env');
 
+// Generate JWT token utility function
+const generateToken = (userId, role) => {
+    return jwt.sign(
+        {
+            id: userId,
+            role: role
+        },
+        config.JWT_SECRET,
+        {
+            expiresIn: config.JWT_EXPIRES_IN
+        }
+    );
+};
+
 class AuthController {
 
     // User registration
     async register(req, res) {
         try {
             const { email, password, role, name, profile } = req.body;
+            console.log('Registration attempt:', { email, role, name, profile });
 
             // Check if user already exists
             const existingUser = await User.findOne({ email });
             if (existingUser) {
+                console.log('User already exists');
                 return res.status(400).json({
                     success: false,
                     error: 'User with this email already exists'
@@ -39,7 +55,7 @@ class AuthController {
             }
 
             // Generate JWT token
-            const token = this.generateToken(user._id, user.role);
+            const token = generateToken(user._id, user.role);
 
             res.status(201).json({
                 success: true,
@@ -78,10 +94,12 @@ class AuthController {
     // User login
     async login(req, res) {
         try {
-            const { email, password } = req.body;
+            const { email, password, role } = req.body;
+            console.log('Login attempt:', { email, role, passwordLength: password?.length });
 
             // Find user by email
             const user = await User.findOne({ email }).select('+password');
+            console.log('User found:', user ? 'Yes' : 'No');
             if (!user) {
                 return res.status(401).json({
                     success: false,
@@ -91,6 +109,7 @@ class AuthController {
 
             // Check if account is active
             if (!user.isActive) {
+                console.log('User account is inactive');
                 return res.status(401).json({
                     success: false,
                     error: 'Account is deactivated. Please contact support.'
@@ -99,6 +118,7 @@ class AuthController {
 
             // Verify password
             const isPasswordValid = await user.comparePassword(password);
+            console.log('Password valid:', isPasswordValid);
             if (!isPasswordValid) {
                 return res.status(401).json({
                     success: false,
@@ -110,7 +130,7 @@ class AuthController {
             await user.updateLastLogin();
 
             // Generate JWT token
-            const token = this.generateToken(user._id, user.role);
+            const token = generateToken(user._id, user.role);
 
             res.json({
                 success: true,
@@ -311,7 +331,7 @@ class AuthController {
             }
 
             // Generate new token
-            const token = this.generateToken(user._id, user.role);
+            const token = generateToken(user._id, user.role);
 
             res.json({
                 success: true,
@@ -454,20 +474,6 @@ class AuthController {
                 details: config.NODE_ENV === 'development' ? error.message : undefined
             });
         }
-    }
-
-    // Generate JWT token
-    generateToken(userId, role) {
-        return jwt.sign(
-            {
-                id: userId,
-                role: role
-            },
-            config.JWT_SECRET,
-            {
-                expiresIn: config.JWT_EXPIRES_IN
-            }
-        );
     }
 
     // Verify token (for external use)
