@@ -647,6 +647,42 @@ class MessageController {
             return [];
         }
     }
+
+    // Get chatbot conversation history
+    async getChatbotHistory(req, res) {
+        try {
+            const userId = req.user?.id || 'anonymous';
+
+            // Mock chatbot conversation history
+            const mockHistory = {
+                success: true,
+                messages: [
+                    {
+                        id: 1,
+                        sender: 'ai',
+                        content: `Hello! I'm your AI learning assistant. I can help you with math concepts, problem-solving, and study strategies. What would you like to learn today?`,
+                        timestamp: new Date(Date.now() - 60000).toISOString(),
+                        type: 'welcome'
+                    }
+                ],
+                conversationId: 'default',
+                metadata: {
+                    totalMessages: 1,
+                    lastActivity: new Date().toISOString()
+                }
+            };
+
+            res.json(mockHistory);
+
+        } catch (error) {
+            console.error('Get chatbot history error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to load chatbot history',
+                error: error.message
+            });
+        }
+    }
 }
 
 module.exports = new MessageController();

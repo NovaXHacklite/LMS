@@ -22,6 +22,9 @@ import {
   Person 
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import ProfileModal from '../student/ProfileModal';
+import MyAccountModal from '../student/MyAccountModal';
+import LogoutModal from '../student/LogoutModal';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
@@ -84,6 +87,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Navbar = ({ userType = 'student', userName = 'User' }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationAnchor, setNotificationAnchor] = useState(null);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [accountModalOpen, setAccountModalOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -96,6 +102,21 @@ const Navbar = ({ userType = 'student', userName = 'User' }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setNotificationAnchor(null);
+  };
+
+  const handleProfileClick = () => {
+    setProfileModalOpen(true);
+    handleMenuClose();
+  };
+
+  const handleAccountClick = () => {
+    setAccountModalOpen(true);
+    handleMenuClose();
+  };
+
+  const handleLogoutClick = () => {
+    setLogoutModalOpen(true);
+    handleMenuClose();
   };
 
   const getInitials = (name) => {
@@ -265,19 +286,19 @@ const Navbar = ({ userType = 'student', userName = 'User' }) => {
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={handleProfileClick}>
             <Avatar sx={{ bgcolor: '#0077B6' }}>
               <Person />
             </Avatar>
             Profile
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={handleAccountClick}>
             <Avatar sx={{ bgcolor: '#00B4D8' }}>
               <AccountCircle />
             </Avatar>
             My Account
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={handleLogoutClick}>
             <Avatar sx={{ bgcolor: '#64748b' }}>
               <Logout />
             </Avatar>
@@ -311,6 +332,20 @@ const Navbar = ({ userType = 'student', userName = 'User' }) => {
           </MenuItem>
         </Menu>
       </Toolbar>
+
+      {/* Modals */}
+      <ProfileModal 
+        isOpen={profileModalOpen} 
+        onClose={() => setProfileModalOpen(false)} 
+      />
+      <MyAccountModal 
+        isOpen={accountModalOpen} 
+        onClose={() => setAccountModalOpen(false)} 
+      />
+      <LogoutModal 
+        isOpen={logoutModalOpen} 
+        onClose={() => setLogoutModalOpen(false)} 
+      />
     </StyledAppBar>
   );
 };

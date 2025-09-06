@@ -7,6 +7,8 @@ const uploadRoutes = require('./upload');
 const messageRoutes = require('./message');
 const analyticsRoutes = require('./analytics');
 const aiRoutes = require('./ai');
+const materialsRoutes = require('./materials');
+const userSettingsRoutes = require('./userSettings');
 
 const router = express.Router();
 
@@ -22,11 +24,13 @@ router.get('/health', (req, res) => {
 
 // API routes
 router.use('/auth', authRoutes);
-router.use('/quiz', quizRoutes);
-router.use('/upload', uploadRoutes);
+// router.use('/quiz', quizRoutes);
+// router.use('/upload', uploadRoutes);
 router.use('/messages', messageRoutes);
-router.use('/analytics', analyticsRoutes);
+// router.use('/analytics', analyticsRoutes);
 router.use('/ai', aiRoutes);
+router.use('/materials', materialsRoutes);
+router.use('/users', userSettingsRoutes);
 
 // 404 handler for undefined routes
 router.use('*', (req, res) => {

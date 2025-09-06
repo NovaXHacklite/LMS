@@ -102,6 +102,277 @@ export const authAPI = {
             const response = await api.get('/auth/profile');
             return response.data;
         } catch (error) {
+            console.error('Get profile error:', error);
+            const errorMessage = error.response?.data?.message ||
+                error.response?.data?.error ||
+                'Failed to get user profile.';
+            throw new Error(errorMessage);
+        }
+    },
+}
+
+// Student Dashboard API calls
+export const dashboardAPI = {
+    // Get dashboard overview data
+    getDashboardData: async () => {
+        try {
+            const response = await api.get('/dashboard/overview');
+            return response.data;
+        } catch (error) {
+            console.error('Dashboard data error:', error);
+            throw new Error('Failed to load dashboard data');
+        }
+    },
+
+    // Get user progress data
+    getProgress: async () => {
+        try {
+            const response = await api.get('/analytics/progress');
+            return response.data;
+        } catch (error) {
+            console.error('Progress data error:', error);
+            throw new Error('Failed to load progress data');
+        }
+    },
+
+    // Get upcoming activities
+    getActivities: async () => {
+        try {
+            const response = await api.get('/activities/upcoming');
+            return response.data;
+        } catch (error) {
+            console.error('Activities error:', error);
+            throw new Error('Failed to load activities');
+        }
+    },
+
+    // Get recent achievements
+    getAchievements: async () => {
+        try {
+            const response = await api.get('/achievements/recent');
+            return response.data;
+        } catch (error) {
+            console.error('Achievements error:', error);
+            throw new Error('Failed to load achievements');
+        }
+    },
+
+    // Get leaderboard data
+    getLeaderboard: async () => {
+        try {
+            const response = await api.get('/leaderboard/class');
+            return response.data;
+        } catch (error) {
+            console.error('Leaderboard error:', error);
+            throw new Error('Failed to load leaderboard');
+        }
+    },
+}
+
+// Lessons API calls
+export const lessonsAPI = {
+    // Get personalized lessons
+    getLessons: async () => {
+        try {
+            const response = await api.get('/lessons/personalized');
+            return response.data;
+        } catch (error) {
+            console.error('Lessons error:', error);
+            throw new Error('Failed to load lessons');
+        }
+    },
+
+    // Get lesson by ID
+    getLesson: async (lessonId) => {
+        try {
+            const response = await api.get(`/lessons/${lessonId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Lesson detail error:', error);
+            throw new Error('Failed to load lesson details');
+        }
+    },
+
+    // Mark lesson as completed
+    completeLesson: async (lessonId) => {
+        try {
+            const response = await api.post(`/lessons/${lessonId}/complete`);
+            return response.data;
+        } catch (error) {
+            console.error('Complete lesson error:', error);
+            throw new Error('Failed to mark lesson as completed');
+        }
+    },
+
+    // Get suggested lessons
+    getSuggestedLessons: async () => {
+        try {
+            const response = await api.get('/lessons/suggested');
+            return response.data;
+        } catch (error) {
+            console.error('Suggested lessons error:', error);
+            throw new Error('Failed to load suggested lessons');
+        }
+    },
+}
+
+// Quiz API calls
+export const quizAPI = {
+    // Get quiz by subject and level
+    getQuiz: async (subject, level = null) => {
+        try {
+            const params = level ? { level } : {};
+            const response = await api.get(`/quiz/start/${subject}`, { params });
+            return response.data;
+        } catch (error) {
+            console.error('Quiz fetch error:', error);
+            throw new Error('Failed to load quiz');
+        }
+    },
+
+    // Submit quiz answers
+    submitQuiz: async (quizId, answers) => {
+        try {
+            const response = await api.post(`/quiz/${quizId}/submit`, { answers });
+            return response.data;
+        } catch (error) {
+            console.error('Quiz submit error:', error);
+            throw new Error('Failed to submit quiz');
+        }
+    },
+
+    // Get quiz history
+    getQuizHistory: async () => {
+        try {
+            const response = await api.get('/quiz/history');
+            return response.data;
+        } catch (error) {
+            console.error('Quiz history error:', error);
+            throw new Error('Failed to load quiz history');
+        }
+    },
+}
+
+// AI Chatbot API calls
+export const chatbotAPI = {
+    // Send message to AI chatbot
+    sendMessage: async (message, conversationId = null) => {
+        try {
+            const response = await api.post('/ai/chat', {
+                message,
+                conversationId
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Chatbot error:', error);
+            throw new Error('Failed to send message to chatbot');
+        }
+    },
+
+    // Get conversation history
+    getConversationHistory: async (conversationId) => {
+        try {
+            const response = await api.get(`/ai/conversations/${conversationId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Conversation history error:', error);
+            throw new Error('Failed to load conversation history');
+        }
+    },
+}
+
+// Messages API calls
+export const messagesAPI = {
+    // Get conversation threads/conversations
+    getThreads: async () => {
+        try {
+            const response = await api.get('/messages/conversations');
+            return response.data;
+        } catch (error) {
+            console.error('Message threads error:', error);
+            throw new Error('Failed to load message threads');
+        }
+    },
+
+    // Get conversations (alias for getThreads)
+    getConversations: async () => {
+        try {
+            const response = await api.get('/messages/conversations');
+            return response.data;
+        } catch (error) {
+            console.error('Conversations error:', error);
+            throw new Error('Failed to load conversations');
+        }
+    },
+
+    // Get messages in a thread
+    getMessages: async (threadId) => {
+        try {
+            const response = await api.get(`/messages/thread/${threadId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Messages error:', error);
+            throw new Error('Failed to load messages');
+        }
+    },
+
+    // Send a message
+    sendMessage: async (messageData) => {
+        try {
+            const response = await api.post('/messages/send', messageData);
+            return response.data;
+        } catch (error) {
+            console.error('Send message error:', error);
+            throw new Error('Failed to send message');
+        }
+    },
+
+    // Mark message as read
+    markAsRead: async (messageId) => {
+        try {
+            const response = await api.put(`/messages/read/${messageId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Mark as read error:', error);
+            throw new Error('Failed to mark message as read');
+        }
+    },
+
+    // Get unread count
+    getUnreadCount: async () => {
+        try {
+            const response = await api.get('/messages/unread/count');
+            return response.data;
+        } catch (error) {
+            console.error('Unread count error:', error);
+            throw new Error('Failed to get unread count');
+        }
+    },
+
+    // Create new message thread
+    createThread: async (teacherId, subject, content) => {
+        try {
+            const response = await api.post('/messages/threads/create', {
+                teacherId,
+                subject,
+                content
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Create thread error:', error);
+            throw new Error('Failed to create message thread');
+        }
+    },
+};
+
+// User Profile API
+export const userProfileAPI = {
+    // Get user profile
+    getProfile: async () => {
+        try {
+            const response = await api.get('/auth/profile');
+            return response.data;
+        } catch (error) {
             throw new Error(error.response?.data?.message || 'Failed to fetch profile');
         }
     },
@@ -125,9 +396,7 @@ export const authAPI = {
             throw new Error(error.response?.data?.message || 'Failed to change password');
         }
     }
-};
-
-// User API calls
+};// User API calls
 export const userAPI = {
     // Get all users (admin only)
     getUsers: async (page = 1, limit = 10, filters = {}) => {
@@ -171,8 +440,8 @@ export const userAPI = {
     }
 };
 
-// Quiz API calls
-export const quizAPI = {
+// Quiz Management API calls
+export const quizManagementAPI = {
     // Get all quizzes
     getQuizzes: async (page = 1, limit = 10, filters = {}) => {
         try {
@@ -300,6 +569,26 @@ export const materialAPI = {
             return response.data;
         } catch (error) {
             throw new Error(error.response?.data?.message || 'Failed to delete material');
+        }
+    },
+
+    // Get video lessons by category
+    getVideoLessons: async (category = 'algebra-basics') => {
+        try {
+            const response = await api.get(`/materials/videos?category=${category}`);
+            return response.data;
+        } catch (error) {
+            throw new Error(error.response?.data?.message || 'Failed to fetch video lessons');
+        }
+    },
+
+    // Mark video lesson as complete
+    markVideoComplete: async (videoId) => {
+        try {
+            const response = await api.post('/materials/complete', { videoId });
+            return response.data;
+        } catch (error) {
+            throw new Error(error.response?.data?.message || 'Failed to mark video as complete');
         }
     }
 };

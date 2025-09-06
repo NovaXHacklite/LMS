@@ -1,3 +1,6 @@
+const Quiz = require('../models/Quiz');
+const QuizAttempt = require('../models/QuizAttempt');
+
 // Mock quiz data - in a real app this would come from the database
 const mockQuizzes = [
     {

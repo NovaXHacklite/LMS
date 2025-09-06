@@ -73,6 +73,108 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
+    settings: {
+        // Notification preferences
+        emailNotifications: {
+            type: Boolean,
+            default: true
+        },
+        pushNotifications: {
+            type: Boolean,
+            default: true
+        },
+        smsNotifications: {
+            type: Boolean,
+            default: false
+        },
+        studyReminders: {
+            type: Boolean,
+            default: true
+        },
+        gradeAlerts: {
+            type: Boolean,
+            default: true
+        },
+        assignmentDeadlines: {
+            type: Boolean,
+            default: true
+        },
+        
+        // General preferences
+        language: {
+            type: String,
+            default: 'English'
+        },
+        theme: {
+            type: String,
+            enum: ['light', 'dark'],
+            default: 'light'
+        },
+        soundEnabled: {
+            type: Boolean,
+            default: true
+        },
+        autoSave: {
+            type: Boolean,
+            default: true
+        },
+        
+        // Privacy settings
+        profileVisibility: {
+            type: String,
+            enum: ['public', 'friends', 'private'],
+            default: 'friends'
+        },
+        showEmail: {
+            type: Boolean,
+            default: false
+        },
+        showPhone: {
+            type: Boolean,
+            default: false
+        },
+        allowMessages: {
+            type: Boolean,
+            default: true
+        }
+    },
+    security: {
+        twoFactorEnabled: {
+            type: Boolean,
+            default: false
+        },
+        passwordChangedAt: {
+            type: Date,
+            default: null
+        }
+    },
+    // Additional profile fields
+    phone: {
+        type: String,
+        default: null
+    },
+    bio: {
+        type: String,
+        maxlength: [500, 'Bio cannot exceed 500 characters'],
+        default: null
+    },
+    dateOfBirth: {
+        type: Date,
+        default: null
+    },
+    address: {
+        type: String,
+        default: null
+    },
+    // Soft delete fields
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
     lastLogin: {
         type: Date,
         default: null
