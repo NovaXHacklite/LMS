@@ -1,30 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StudentDashboard from '../components/student/StudentDashboard';
 import Sidebar from '../components/common/sidebar';
 import Navbar from '../components/common/navbar';
+import ProgressTracker from '../components/student/ProgressTracker';
+import QuizComponent from '../components/student/QuizComponent';
+import ChatbotInterface from '../components/student/ChatbotInterface';
+import MessageThread from '../components/student/MessageThread';
+import MyLessons from '../components/student/myLessons';
 
 const NAVBAR_HEIGHT = 64;
 
-const StudentPage = ({ user }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        <Navbar userName={user?.name} userType={user?.role} />
-        <div style={{ 
-            display: 'flex', 
-            flex: 1, 
-            marginTop: NAVBAR_HEIGHT // Push content below navbar
-        }}>
-            <Sidebar type="student" user={user} />
-            <div style={{ 
-                flex: 1, 
-                marginLeft: 280, // Account for sidebar width
-                padding: '24px',
-                backgroundColor: '#f8fafc',
-                minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`
-            }}>
-                <StudentDashboard user={user} />
+const StudentPage = ({ user }) => {
+    const [activeTab, setActiveTab] = useState('dashboard');
+
+    let MainContent;
+    switch (activeTab) {
+        case 'dashboard':
+            MainContent = <StudentDashboard user={user} />;
+            break;
+        case 'progress':
+            MainContent = <ProgressTracker userId={user?.id} />;
+            break;
+        case 'quiz':
+            MainContent = <QuizComponent userId={user?.id} />;
+            break;
+        case 'chatbot':
+            MainContent = <ChatbotInterface userId={user?.id} />;
+            break;
+        case 'messages':
+            MainContent = <MessageThread userId={user?.id} />;
+            break;
+        case 'my-lessons':
+            MainContent = <MyLessons user={user} />;
+            break;
+        default:
+            MainContent = <StudentDashboard user={user} />;
+    }
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+            <Navbar userName={user?.name} userType={user?.role} />
+            <div style={{ display: 'flex', flex: 1, marginTop: NAVBAR_HEIGHT }}>
+                <Sidebar
+                    type="student"
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                />
+                <div style={{
+                    flex: 1,
+                    
+                    padding: '24px',
+                    backgroundColor: '#f8fafc',
+                    minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`
+                }}>
+                    {MainContent}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 export default StudentPage;

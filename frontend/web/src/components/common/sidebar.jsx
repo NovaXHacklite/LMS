@@ -75,6 +75,7 @@ const tabConfig = {
       icon: <DashboardIcon />,
       badge: null
     },
+    
     { 
       key: 'courses', 
       label: 'My Courses', 
@@ -118,29 +119,36 @@ const tabConfig = {
       badge: null
     },
     { 
-      key: 'courses', 
-      label: 'My Courses', 
-      icon: <SchoolIcon />,
-      badge: 3
-    },
-    { 
-      key: 'assignments', 
-      label: 'Assignments', 
-      icon: <AssignmentIcon />,
-      badge: 5
-    },
-    { 
-      key: 'grades', 
-      label: 'Grades', 
-      icon: <GradeIcon />,
+      key: 'my-lessons', 
+      label: 'My Lessons', 
+      icon: <BookIcon />,
       badge: null
     },
     { 
-      key: 'notifications', 
-      label: 'Notifications', 
-      icon: <FeedIcon />,
-      badge: 2
+      key: 'progress', 
+      label: 'Progress', 
+      icon: <BarChartIcon />,
+      badge: null
     },
+    { 
+      key: 'quiz', 
+      label: 'Quiz', 
+      icon: <AssignmentIcon />,
+      badge: null
+    },
+    { 
+      key: 'chatbot', 
+      label: 'Chatbot', 
+      icon: <FeedIcon />,
+      badge: null
+    },
+    { 
+      key: 'messages', 
+      label: 'Messages', 
+      icon: <GroupIcon />,
+      badge: null
+    },
+    
   ],
 };
 
