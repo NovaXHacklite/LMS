@@ -4,7 +4,7 @@ import Navbar from '../components/common/navbar';
 import TeacherHome from '../components/teacher/TeacherHome';
 import SubjectManager from '../components/teacher/SubjectManager';
 import NotesPanel from '../components/teacher/NotesPanel';
-import SettingsPage from '../components/teacher/SettingsPage';
+import SettingsPage from '../components/teacher/ChatPanel';
 import CalendarView from '../components/teacher/CalendarView';
 
 const NAVBAR_HEIGHT = 64;

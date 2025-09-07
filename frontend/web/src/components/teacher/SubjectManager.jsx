@@ -1,133 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { subjectsByGrade, lessonsData } from "../../data/lessonsData";
+import { BookIcon, CalculatorIcon, ScienceIcon, ComputerIcon } from "../icons/Icons";
+import Card from "../ui/Card";
+import Breadcrumb from "../ui/Breadcrumb";
+import ProgressTracker from "../student/ProgressTracker"; 
 
 const SubjectManager = () => {
-  // Sample data
-  const subjects = [
-    { id: 'math', name: 'Mathematics' },
-    { id: 'sci', name: 'Science' }
+  const [grade, setGrade] = useState(null);
+  const [subject, setSubject] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
+
+  const breadcrumbs = [
+    { label: "Dashboard", active: !grade },
+    { label: grade ? `Grade ${grade}` : "Grade", active: !!grade && !subject },
+    { label: subject || "Subject", active: !!subject },
   ];
 
-  const students = [
-    { index: 'S001', name: 'Ayesha' },
-    { index: 'S002', name: 'Nuwan' }
-  ];
-
-  const lessons = [
-    { id: 'L01', title: 'Algebra Basics' },
-    { id: 'L02', title: 'Newton’s Laws' }
-  ];
-
-  // State
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [view, setView] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState('');
-  const [selectedLesson, setSelectedLesson] = useState('');
-  const [comment, setComment] = useState('');
-
-  // Handlers
-  const handleSubjectSelect = (subjectId) => {
-    setSelectedSubject(subjectId);
-    setView(null);
-    setSelectedStudent('');
-    setSelectedLesson('');
-    setComment('');
+  const subjectIcons = {
+    Mathematics: <CalculatorIcon />,
+    Science: <ScienceIcon />,
+    English: <BookIcon />,
+    ICT: <ComputerIcon />,
   };
 
-  const handleSubmitFeedback = () => {
-    console.log('Feedback submitted:', {
-      subject: selectedSubject,
-      student: selectedStudent,
-      lesson: selectedLesson,
-      comment
-    });
-    alert('Feedback submitted successfully.');
-  };
-
-  // Views
-  const renderNavigation = () => (
-    <div>
-      <h3>Selected Subject: {selectedSubject}</h3>
-      <button onClick={() => setView('upload')}>Upload Materials</button>
-      <button onClick={() => setView('chat')}>Chat Bot</button>
-      <button onClick={() => setView('progress')}>Progress Check</button>
-    </div>
-  );
-
-  const renderUpload = () => (
-    <div>
-      <h4>Upload Materials</h4>
-      <input type="file" />
-      <button>Upload</button>
-    </div>
-  );
-
-  const renderChatBot = () => (
-    <div>
-      <h4>Chat Bot</h4>
-      <p>Chat interface for subject <strong>{selectedSubject}</strong> goes here.</p>
-    </div>
-  );
-
-  const renderProgressCheck = () => (
-    <div>
-      <h4>Progress Check</h4>
-
-      <label>Student:</label>
-      <select value={selectedStudent} onChange={(e) => setSelectedStudent(e.target.value)}>
-        <option value="">-- Select Student --</option>
-        {students.map((s) => (
-          <option key={s.index} value={s.index}>{s.name}</option>
-        ))}
-      </select>
-
-      <br />
-
-      <label>Lesson:</label>
-      <select value={selectedLesson} onChange={(e) => setSelectedLesson(e.target.value)}>
-        <option value="">-- Select Lesson --</option>
-        {lessons.map((l) => (
-          <option key={l.id} value={l.id}>{l.title}</option>
-        ))}
-      </select>
-
-      <div style={{ marginTop: '20px' }}>
-        <h5>Graphical Analysis</h5>
-        <div style={{ width: '400px', height: '300px', background: '#ddd', textAlign: 'center', lineHeight: '300px' }}>
-          [Chart Placeholder]
-        </div>
-      </div>
-
-      <div style={{ marginTop: '20px' }}>
-        <h5>Teacher Comment</h5>
-        <textarea
-          rows="4"
-          cols="50"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <br />
-        <button onClick={handleSubmitFeedback}>Submit Feedback</button>
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    if (subject) {
+      // Simulate fetching analytics for selected subject
+      const lessons = lessonsData[subject] || [];
+      const mockAnalytics = lessons.map((lesson) => ({
+        lessonId: lesson.id,
+        title: lesson.title,
+        views: Math.floor(Math.random() * 100),
+        avgPreQuizScore: Math.floor(Math.random() * 50 + 50),
+        avgFinalScore: Math.floor(Math.random() * 50 + 50),
+        completionRate: Math.floor(Math.random() * 100),
+        retryRate: Math.floor(Math.random() * 30),
+      }));
+      setAnalytics(mockAnalytics);
+    }
+  }, [subject]);
 
   return (
-    <div>
-      <h2>Subject Manager</h2>
-
-      <ul>
-        {subjects.map((subj) => (
-          <li key={subj.id}>
-            <button onClick={() => handleSubjectSelect(subj.id)}>{subj.name}</button>
-          </li>
-        ))}
-      </ul>
-
-      {selectedSubject && renderNavigation()}
-
-      {view === 'upload' && renderUpload()}
-      {view === 'chat' && renderChatBot()}
-      {view === 'progress' && renderProgressCheck()}
+    <div className="min-h-screen bg-gradient-to-br from-[#CAF0F8]/40 via-[#90E0EF]/40 to-[#00B4D8]/40">
+      <Breadcrumb items={breadcrumbs} />
+      <section className="max-w-7xl mx-auto px-6 py-8">
+        {!grade ? (
+          <>
+            <h2 className="text-3xl font-bold text-[#03045E] mb-4">Select Grade to View Subjects</h2>
+            <div className="flex flex-wrap justify-center">
+              {[6, 7, 8, 9, 10, 11].map((g) => (
+                <Card
+                  key={g}
+                  title={`Grade ${g}`}
+                  subtitle={`${subjectsByGrade[g]?.length || 0} subjects`}
+                  icon={<span className="text-2xl font-bold">{g}</span>}
+                  onClick={() => setGrade(g)}
+                />
+              ))}
+            </div>
+          </>
+        ) : !subject ? (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold text-[#03045E]">Subjects for Grade {grade}</h2>
+              <button
+                className="px-4 py-2 bg-white text-[#0077B6] rounded-lg font-medium shadow-sm hover:shadow-md"
+                onClick={() => setGrade(null)}
+              >
+                ← Change Grade
+              </button>
+            </div>
+            <div className="flex flex-wrap justify-center">
+              {(subjectsByGrade[grade] || []).map((s) => (
+                <Card
+                  key={s}
+                  title={s}
+                  subtitle={`${lessonsData[s]?.length || 0} lessons`}
+                  icon={subjectIcons[s]}
+                  onClick={() => setSubject(s)}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold text-[#03045E]">{subject} Analytics</h2>
+              <button
+                className="px-4 py-2 bg-white text-[#0077B6] rounded-lg font-medium shadow-sm hover:shadow-md"
+                onClick={() => setSubject(null)}
+              >
+                ← Change Subject
+              </button>
+            </div>
+            <SubjectStatsPanel subject={subject} analytics={analytics} />
+          </>
+        )}
+      </section>
     </div>
   );
 };
