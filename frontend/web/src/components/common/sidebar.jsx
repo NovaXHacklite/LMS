@@ -134,6 +134,12 @@ const tabConfig = {
       badge: null
     },
     { 
+      key: 'assignments', 
+      label: 'Assignments', 
+      icon: <AssignmentIcon />,
+      badge: null
+    },
+    { 
       key: 'chatbot', 
       label: 'Chatbot', 
       icon: <FeedIcon />,
@@ -145,7 +151,6 @@ const tabConfig = {
       icon: <GroupIcon />,
       badge: null
     },
-    
   ],
 };
 

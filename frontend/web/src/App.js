@@ -26,9 +26,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
         return <Navigate to="/login" replace />;
     }
 
-    // Only check roles if allowedRoles is specified and not empty
     if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-        // Redirect to the correct dashboard instead of showing access denied
         const redirectPath = user?.role === 'teacher' ? '/teacher' : '/student';
         return <Navigate to={redirectPath} replace />;
     }
@@ -52,12 +50,22 @@ const PublicRoute = ({ children }) => {
     }
 
     if (isAuthenticated) {
-        // Redirect to appropriate dashboard based on role
         const redirectPath = user?.role === 'teacher' ? '/teacher' : '/student';
         return <Navigate to={redirectPath} replace />;
     }
 
     return children;
+};
+
+// Component to redirect to appropriate dashboard
+const DashboardRedirect = () => {
+    const { user } = useAuth();
+
+    if (user?.role === 'teacher') {
+        return <Navigate to="/teacher" replace />;
+    } else {
+        return <Navigate to="/student" replace />;
+    }
 };
 
 function AppRoutes() {
@@ -93,15 +101,13 @@ function AppRoutes() {
                 }
             />
 
-            {/* Protected Routes */}
+            {/* Student Route - accessible without authentication */}
             <Route
                 path="/student"
-                element={
-                    <ProtectedRoute allowedRoles={['student']}>
-                        <StudentPage />
-                    </ProtectedRoute>
-                }
+                element={<StudentPage />}
             />
+
+            {/* Protected Teacher Route */}
             <Route
                 path="/teacher"
                 element={
@@ -126,17 +132,6 @@ function AppRoutes() {
         </Routes>
     );
 }
-
-// Component to redirect to appropriate dashboard
-const DashboardRedirect = () => {
-    const { user } = useAuth();
-
-    if (user?.role === 'teacher') {
-        return <Navigate to="/teacher" replace />;
-    } else {
-        return <Navigate to="/student" replace />;
-    }
-};
 
 function App() {
     return (

@@ -7,6 +7,7 @@ import QuizComponent from '../components/student/QuizComponent';
 import ChatbotInterface from '../components/student/ChatbotInterface';
 import MessageThread from '../components/student/MessageThread';
 import MyLessons from '../components/student/myLessons';
+import AssignmentTab from '../components/student/AssignmentTab';
 
 const NAVBAR_HEIGHT = 64;
 
@@ -23,6 +24,9 @@ const StudentPage = ({ user }) => {
             break;
         case 'quiz':
             MainContent = <QuizComponent userId={user?.id} />;
+            break;
+        case 'assignments':
+            MainContent = <AssignmentTab />;
             break;
         case 'chatbot':
             MainContent = <ChatbotInterface userId={user?.id} />;
