@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '../services/AuthContext';
 import StudentDashboard from '../components/student/StudentDashboard';
 import Sidebar from '../components/common/sidebar';
 import Navbar from '../components/common/navbar';
@@ -11,7 +12,8 @@ import AssignmentTab from '../components/student/AssignmentTab';
 
 const NAVBAR_HEIGHT = 64;
 
-const StudentPage = ({ user }) => {
+const StudentPage = () => {
+    const { user } = useAuth(); // Get user from AuthContext
     const [activeTab, setActiveTab] = useState('dashboard');
 
     let MainContent;
@@ -52,7 +54,7 @@ const StudentPage = ({ user }) => {
                 />
                 <div style={{
                     flex: 1,
-                    
+
                     padding: '24px',
                     backgroundColor: '#f8fafc',
                     minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`

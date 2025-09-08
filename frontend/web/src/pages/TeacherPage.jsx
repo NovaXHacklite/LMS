@@ -1,57 +1,27 @@
-import React, { useState } from 'react';
-import Sidebar from '../components/common/sidebar';
-import Navbar from '../components/common/navbar';
-import TeacherHome from '../components/teacher/TeacherHome';
-import SubjectManager from '../components/teacher/SubjectManager';
-import NotesPanel from '../components/teacher/NotesPanel';
-import SettingsPage from '../components/teacher/ChatPanel';
-import CalendarView from '../components/teacher/CalendarView';
+import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import TeacherDashboard from '../components/teacher/TeacherDashboard';
 
-const NAVBAR_HEIGHT = 64;
+// Create a query client
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: 2,
+            staleTime: 5 * 60 * 1000, // 5 minutes
+            cacheTime: 10 * 60 * 1000, // 10 minutes
+        },
+    },
+});
 
 const TeacherPage = ({ user }) => {
-    const [activeTab, setActiveTab] = useState('home');
-
-    let MainContent;
-    switch (activeTab) {
-        case 'home':
-            MainContent = <TeacherHome user={user} />;
-            break;
-        case 'subject':
-            MainContent = <SubjectManager userId={user?.id} />;
-            break;
-        case 'notes':
-            MainContent = <NotesPanel userId={user?.id} />;
-            break;
-        case 'settings':
-            MainContent = <SettingsPage user={user} />;
-            break;
-        case 'calendar':
-            MainContent = <CalendarView userId={user?.id} />;
-            break;
-        default:
-            MainContent = <TeacherHome user={user} />;
-    }
-
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-            <Navbar userName={user?.name} userType={user?.role} />
-            <div style={{ display: 'flex', flex: 1, marginTop: NAVBAR_HEIGHT }}>
-                <Sidebar
-                    type="teacher"
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                />
-                <div style={{
-                    flex: 1,
-                    padding: '24px',
-                    backgroundColor: '#f8fafc',
-                    minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`
-                }}>
-                    {MainContent}
-                </div>
+        <QueryClientProvider client={queryClient}>
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+                <TeacherDashboard />
             </div>
-        </div>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     );
 };
 
