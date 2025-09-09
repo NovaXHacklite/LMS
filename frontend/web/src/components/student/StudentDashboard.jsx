@@ -31,13 +31,14 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     if (user) {
+      console.log('Student Dashboard loaded for user:', user.name, 'ID:', user.id);
       // TODO: Add socket connection later
       // socketService.connect(user.id);
     }
   }, [user]);
 
   // Loading state
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen p-6 flex items-center justify-center">
         <div className="text-center">

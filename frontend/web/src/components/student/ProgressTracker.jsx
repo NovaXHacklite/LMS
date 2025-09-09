@@ -4,13 +4,13 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { 
-  FaStar, 
-  FaChartLine, 
-  FaBook, 
-  FaClock, 
-  FaTrophy, 
-  FaGraduationCap, 
+import {
+  FaStar,
+  FaChartLine,
+  FaBook,
+  FaClock,
+  FaTrophy,
+  FaGraduationCap,
   FaPlay,
   FaChevronDown,
   FaChevronRight,
@@ -119,14 +119,12 @@ const StatsCard = ({ icon: Icon, title, value, subtitle, color, bgColor }) => (
 
 // Achievement Badge Component
 const AchievementBadge = ({ achievement }) => (
-  <div className={`p-3 rounded-lg border transition-all duration-300 hover:scale-105 ${
-    achievement.earned 
-      ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200' 
+  <div className={`p-3 rounded-lg border transition-all duration-300 hover:scale-105 ${achievement.earned
+      ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200'
       : 'bg-gray-50 border-gray-200 opacity-60'
-  }`}>
-    <achievement.icon className={`text-xl mb-2 ${
-      achievement.earned ? 'text-yellow-500' : 'text-gray-400'
-    }`} />
+    }`}>
+    <achievement.icon className={`text-xl mb-2 ${achievement.earned ? 'text-yellow-500' : 'text-gray-400'
+      }`} />
     <h4 className="font-semibold text-sm text-gray-800">{achievement.title}</h4>
     <p className="text-xs text-gray-600 mt-1">{achievement.description}</p>
   </div>
@@ -143,7 +141,7 @@ const WeeklyActivityChart = ({ data }) => (
       {data.map((day, index) => (
         <div key={index} className="text-center">
           <div className="text-xs text-gray-500 mb-2">{day.day}</div>
-          <div 
+          <div
             className="w-full rounded-lg transition-all duration-300 hover:scale-110 cursor-pointer"
             style={{
               height: `${Math.max(day.lessons * 20, 20)}px`,
@@ -176,7 +174,7 @@ const Badge = ({ level }) => {
 // Enhanced Lesson Card Component
 const LessonCard = ({ lesson }) => {
   const [expanded, setExpanded] = useState(false);
-  
+
   const getStatusColor = (status) => {
     switch (status) {
       case "Completed": return "#10B981";
@@ -195,10 +193,9 @@ const LessonCard = ({ lesson }) => {
           </div>
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <Badge level={lesson.level} />
-            <span className={`text-sm font-medium ${
-              lesson.status === "Completed" ? "text-emerald-600" :
-              lesson.status === "In Progress" ? "text-blue-600" : "text-gray-500"
-            }`}>{lesson.status}</span>
+            <span className={`text-sm font-medium ${lesson.status === "Completed" ? "text-emerald-600" :
+                lesson.status === "In Progress" ? "text-blue-600" : "text-gray-500"
+              }`}>{lesson.status}</span>
           </div>
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <span className="flex items-center gap-1">
@@ -224,7 +221,7 @@ const LessonCard = ({ lesson }) => {
           />
         </div>
       </div>
-      
+
       {expanded && (
         <div className="mt-6 pt-4 border-t border-gray-100">
           <div className="grid grid-cols-2 gap-4 mb-4">
@@ -241,14 +238,14 @@ const LessonCard = ({ lesson }) => {
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-gray-700">Achievement:</span>
               <div className="flex gap-1">
-                {lesson.score >= 90 && <FaStar className="text-yellow-400"/>}
-                {lesson.score >= 95 && <FaTrophy className="text-yellow-500"/>}
-                {lesson.progress === 100 && <FaCertificate className="text-blue-500"/>}
+                {lesson.score >= 90 && <FaStar className="text-yellow-400" />}
+                {lesson.score >= 95 && <FaTrophy className="text-yellow-500" />}
+                {lesson.progress === 100 && <FaCertificate className="text-blue-500" />}
               </div>
             </div>
             <span className="text-xs text-gray-500">Last accessed: {lesson.lastAccessed}</span>
@@ -265,9 +262,24 @@ const ProgressTracker = ({ userId }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    console.log(`Load progress for user ${userId}`);
-    // fetch data from backend or localStorage here
+    if (userId) {
+      console.log(`Loading progress for user ${userId}`);
+      // fetch data from backend or localStorage here
+    } else {
+      console.log('No userId provided to ProgressTracker');
+    }
   }, [userId]);
+
+  // If no userId, show loading or error state
+  if (!userId) {
+    return (
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
+        <div className="text-center py-12">
+          <p className="text-gray-500">Loading user data...</p>
+        </div>
+      </div>
+    );
+  }
 
   const totalLessons = progressData.lessons.length;
   const completedLessons = progressData.lessons.filter(l => l.status === "Completed").length;
@@ -294,11 +306,10 @@ const ProgressTracker = ({ userId }) => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${
-              activeTab === tab.id
+            className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${activeTab === tab.id
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
           >
             <tab.icon className="text-sm" />
             {tab.label}
@@ -411,7 +422,7 @@ const ProgressTracker = ({ userId }) => {
               </span>
             </div>
           </div>
-          
+
           <div className="grid lg:grid-cols-2 gap-6">
             {progressData.lessons.map((lesson) => (
               <LessonCard key={lesson.id} lesson={lesson} />
@@ -429,7 +440,7 @@ const ProgressTracker = ({ userId }) => {
               <AchievementBadge key={achievement.id} achievement={achievement} />
             ))}
           </div>
-          
+
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200">
             <div className="flex items-center gap-3 mb-4">
               <FaTrophy className="text-2xl text-yellow-600" />
