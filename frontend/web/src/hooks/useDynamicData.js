@@ -1,101 +1,111 @@
 import { useState, useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
     authAPI,
     analyticsAPI,
-    materialAPI
+    materialAPI,
+    api
 } from '../services/api';
 
-// Custom hook for dashboard data
-export const useDashboard = (userId) => {
+// Custom hook for dashboard data with teacher functionality
+export const useDashboard = (userId, role = 'student') => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const queryClient = useQueryClient();
 
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            // For now, create mock data until backend APIs are ready
-            const mockData = {
-                overview: {
-                    streak: 7,
-                    totalPoints: 1250,
-                    completedLessons: 12,
-                    badges: 3
-                },
-                progress: {
-                    completedLessons: 12,
-                    totalLessons: 20,
-                    xp: 1250,
-                    streak: 7
-                },
-                currentLesson: {
-                    title: 'Mathematics Basics',
-                    progress: 45,
-                    type: 'lesson'
-                },
-                activities: [
-                    { id: 1, name: 'Math Quiz', date: '2025-09-07', type: 'quiz' },
-                    { id: 2, name: 'Science Lesson', date: '2025-09-08', type: 'lesson' }
-                ],
-                achievements: [
-                    { id: 1, name: 'First Quiz Completed', icon: '🏆', date: '2025-09-05' },
-                    { id: 2, name: '7-Day Streak', icon: '🔥', date: '2025-09-06' }
-                ],
-                leaderboard: [
-                    { name: 'John Doe', points: 1500, rank: 1, isUser: false },
-                    { name: 'Sarah Wilson', points: 1100, rank: 2, isUser: false },
-                    { name: 'You', points: 1250, rank: 3, isUser: true }
-                ],
-                // Algebra Basics data
-                algebraProgress: {
-                    completed: 0, // Number of completed videos (0-5)
-                    total: 5
-                },
-                algebraLessons: [
-                    {
-                        id: 1,
-                        title: "Introduction to Variables",
-                        description: "Learn the basics of algebraic variables and how they work",
-                        duration: "12 min",
-                        completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=RAGnDFbxF10"
-                    },
-                    {
-                        id: 2,
-                        title: "Understanding Expressions",
-                        description: "Master algebraic expressions and their components",
-                        duration: "15 min",
-                        completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=l7F8XrqKKBs"
-                    },
-                    {
-                        id: 3,
-                        title: "Solving Simple Linear Equations",
-                        description: "Step-by-step guide to solving linear equations",
-                        duration: "18 min",
-                        completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=BRdMrTvgTDA"
-                    },
-                    {
-                        id: 4,
-                        title: "Word Problems in Algebra",
-                        description: "Apply algebraic concepts to real-world problems",
-                        duration: "20 min",
-                        completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=iBOcxVmSYYs"
-                    },
-                    {
-                        id: 5,
-                        title: "Practice & Tips",
-                        description: "Essential tips and practice exercises for mastery",
-                        duration: "14 min",
-                        completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=J_Hz7fudPLk"
-                    }
-                ]
-            };
 
-            setData(mockData);
+            if (role === 'teacher') {
+                // Fetch teacher-specific data
+                const response = await api.get(`/api/v1/teacher/dashboard/${userId}`);
+                setData(response.data);
+            } else {
+                // For now, create mock data until backend APIs are ready
+                const mockData = {
+                    overview: {
+                        streak: 7,
+                        totalPoints: 1250,
+                        completedLessons: 12,
+                        badges: 3
+                    },
+                    progress: {
+                        completedLessons: 12,
+                        totalLessons: 20,
+                        xp: 1250,
+                        streak: 7
+                    },
+                    currentLesson: {
+                        title: 'Mathematics Basics',
+                        progress: 45,
+                        type: 'lesson'
+                    },
+                    activities: [
+                        { id: 1, name: 'Math Quiz', date: '2025-09-07', type: 'quiz' },
+                        { id: 2, name: 'Science Lesson', date: '2025-09-08', type: 'lesson' }
+                    ],
+                    achievements: [
+                        { id: 1, name: 'First Quiz Completed', icon: '🏆', date: '2025-09-05' },
+                        { id: 2, name: '7-Day Streak', icon: '🔥', date: '2025-09-06' }
+                    ],
+                    leaderboard: [
+                        { name: 'John Doe', points: 1500, rank: 1, isUser: false },
+                        { name: 'Sarah Wilson', points: 1100, rank: 2, isUser: false },
+                        { name: 'You', points: 1250, rank: 3, isUser: true }
+                    ],
+                    // Algebra Basics data
+                    algebraProgress: {
+                        completed: 0, // Number of completed videos (0-5)
+                        total: 5
+                    },
+                    algebraLessons: [
+                        {
+                            id: 1,
+                            title: "Introduction to Variables",
+                            description: "Learn the basics of algebraic variables and how they work",
+                            duration: "12 min",
+                            completed: false,
+                            videoUrl: "https://www.youtube.com/watch?v=RAGnDFbxF10"
+                        },
+                        {
+                            id: 2,
+                            title: "Understanding Expressions",
+                            description: "Master algebraic expressions and their components",
+                            duration: "15 min",
+                            completed: false,
+                            videoUrl: "https://www.youtube.com/watch?v=l7F8XrqKKBs"
+                        },
+                        {
+                            id: 3,
+                            title: "Solving Simple Linear Equations",
+                            description: "Step-by-step guide to solving linear equations",
+                            duration: "18 min",
+                            completed: false,
+                            videoUrl: "https://www.youtube.com/watch?v=BRdMrTvgTDA"
+                        },
+                        {
+                            id: 4,
+                            title: "Word Problems in Algebra",
+                            description: "Apply algebraic concepts to real-world problems",
+                            duration: "20 min",
+                            completed: false,
+                            videoUrl: "https://www.youtube.com/watch?v=iBOcxVmSYYs"
+                        },
+                        {
+                            id: 5,
+                            title: "Practice & Tips",
+                            description: "Essential tips and practice exercises for mastery",
+                            duration: "14 min",
+                            completed: false,
+                            videoUrl: "https://www.youtube.com/watch?v=J_Hz7fudPLk"
+                        }
+                    ]
+                };
+
+                setData(mockData);
+            }
             setError(null);
         } catch (err) {
             console.error('Error fetching dashboard data:', err);
@@ -104,6 +114,171 @@ export const useDashboard = (userId) => {
             setLoading(false);
         }
     };
+
+    // Teacher-specific mutations
+    const createNote = useMutation(
+        (noteData) => api.post('/api/v1/teacher/notes', noteData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherNotes']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const updateNote = useMutation(
+        (noteData) => api.put(`/api/v1/teacher/notes/${noteData.id}`, noteData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherNotes']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const deleteNote = useMutation(
+        (noteId) => api.delete(`/api/v1/teacher/notes/${noteId}`),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherNotes']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const uploadMaterial = useMutation(
+        (formData) => api.post('/api/v1/teacher/materials', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherMaterials']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const createAssignment = useMutation(
+        (assignmentData) => api.post('/api/v1/teacher/assignments', assignmentData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherAssignments']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const updateAssignment = useMutation(
+        (assignmentData) => api.put(`/api/v1/teacher/assignments/${assignmentData.id}`, assignmentData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherAssignments']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const sendChatMessage = useMutation(
+        (messageData) => api.post('/api/v1/teacher/messages', messageData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherMessages']);
+            },
+        }
+    );
+
+    const updateSettings = useMutation(
+        (settingsData) => api.put('/api/v1/teacher/settings', settingsData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherSettings']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    // Advanced features mutations
+    const getAnalytics = useQuery(
+        'teacherAnalytics',
+        () => api.get('/api/v1/teacher/analytics').then(res => res.data),
+        {
+            enabled: role === 'teacher',
+            staleTime: 5 * 60 * 1000, // 5 minutes
+        }
+    );
+
+    const createLessonPlan = useMutation(
+        (planData) => api.post('/api/v1/teacher/lesson-plan', planData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherLessonPlans']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const updateGradebook = useMutation(
+        (gradeData) => api.post('/api/v1/teacher/gradebook', gradeData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherGradebook']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const sendNotification = useMutation(
+        (notificationData) => api.post('/api/v1/teacher/notifications', notificationData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherNotifications']);
+            },
+        }
+    );
+
+    const createCollaborationNote = useMutation(
+        (noteData) => api.post('/api/v1/teacher/collaboration', noteData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherCollaboration']);
+                fetchDashboardData();
+            },
+        }
+    );
+
+    const generateReport = useMutation(
+        (reportParams) => api.post('/api/v1/teacher/reports', reportParams),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['teacherReports']);
+            },
+        }
+    );
+
+    const getLessonPlans = useQuery(
+        'teacherLessonPlans',
+        () => api.get('/api/v1/teacher/lesson-plans').then(res => res.data),
+        {
+            enabled: role === 'teacher',
+        }
+    );
+
+    const getGradebook = useQuery(
+        'teacherGradebook',
+        () => api.get('/api/v1/teacher/gradebook').then(res => res.data),
+        {
+            enabled: role === 'teacher',
+        }
+    );
+
+    const getNotifications = useQuery(
+        'teacherNotifications',
+        () => api.get('/api/v1/teacher/notifications').then(res => res.data),
+        {
+            enabled: role === 'teacher',
+            refetchInterval: 30000, // Refresh every 30 seconds
+        }
+    );
 
     useEffect(() => {
         if (userId) {
@@ -154,7 +329,31 @@ export const useDashboard = (userId) => {
         loading,
         error,
         refetch,
-        markVideoComplete
+        markVideoComplete,
+        // Teacher-specific functions
+        createNote,
+        updateNote,
+        deleteNote,
+        uploadMaterial,
+        createAssignment,
+        updateAssignment,
+        sendChatMessage,
+        updateSettings,
+        // Advanced features
+        analytics: getAnalytics.data,
+        analyticsLoading: getAnalytics.isLoading,
+        lessonPlans: getLessonPlans.data,
+        lessonPlansLoading: getLessonPlans.isLoading,
+        gradebook: getGradebook.data,
+        gradebookLoading: getGradebook.isLoading,
+        notifications: getNotifications.data,
+        notificationsLoading: getNotifications.isLoading,
+        // Advanced mutations
+        createLessonPlan,
+        updateGradebook,
+        sendNotification,
+        createCollaborationNote,
+        generateReport
     };
 };
 

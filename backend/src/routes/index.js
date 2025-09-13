@@ -9,6 +9,7 @@ const analyticsRoutes = require('./analytics');
 const aiRoutes = require('./ai');
 const materialsRoutes = require('./materials');
 const userSettingsRoutes = require('./userSettings');
+const teacherRoutes = require('./teacher');
 
 const router = express.Router();
 
@@ -31,6 +32,7 @@ router.use('/messages', messageRoutes);
 router.use('/ai', aiRoutes);
 router.use('/materials', materialsRoutes);
 router.use('/users', userSettingsRoutes);
+router.use('/teacher', teacherRoutes);
 
 // 404 handler for undefined routes
 router.use('*', (req, res) => {
